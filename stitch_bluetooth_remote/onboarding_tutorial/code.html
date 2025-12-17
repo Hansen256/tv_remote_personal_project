@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding Tutorial</title>
+<!-- Google Fonts: Space Grotesk & Noto Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary selection:text-white overflow-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col justify-between p-4 sm:p-6 md:max-w-md md:mx-auto border-x border-transparent dark:border-slate-800/50">
+<!-- Top Navigation / Skip -->
+<div class="flex w-full items-center justify-end py-2">
+<button class="group flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold text-slate-500 transition-colors hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white">
+<span>Skip</span>
+</button>
+</div>
+<!-- Main Content Area: Carousel & Text -->
+<div class="flex flex-1 flex-col items-center justify-center gap-6 pb-8 pt-4">
+<!-- Hero Visual (Modified from StoryCarousel style) -->
+<div class="relative w-full aspect-[4/5] max-h-[450px] overflow-hidden rounded-2xl shadow-2xl shadow-primary/10 bg-slate-200 dark:bg-slate-800">
+<!-- Decorative Elements -->
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay"></div>
+<!-- Main Image -->
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 hover:scale-105 bg-image-device" data-alt="Close up of a modern electronic device with glowing blue lights in a dark environment"></div>
+</div>
+<!-- Floating Icon Badge -->
+<div class="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm shadow-lg">
+<span class="material-symbols-outlined text-primary text-2xl">settings_remote</span>
+</div>
+</div>
+<!-- Text Content -->
+<div class="flex w-full flex-col items-center text-center gap-3 px-2">
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+                    Control Everything
+                </h1>
+<p class="text-base font-normal leading-relaxed text-slate-500 dark:text-slate-400 max-w-[32ch]">
+                    Experience seamless control over all your devices with our advanced Bluetooth remote mapping.
+                </p>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex w-full flex-col items-center gap-6 pb-6 pt-2">
+<!-- Page Indicators -->
+<div class="flex flex-row items-center justify-center gap-2">
+<div class="h-2 w-8 rounded-full bg-primary transition-all duration-300"></div>
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700 hover:bg-primary/50 cursor-pointer transition-colors"></div>
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700 hover:bg-primary/50 cursor-pointer transition-colors"></div>
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700 hover:bg-primary/50 cursor-pointer transition-colors"></div>
+</div>
+<!-- Primary Action Button -->
+<button class="relative w-full overflow-hidden rounded-xl bg-primary py-4 text-center font-bold text-white shadow-lg shadow-primary/25 transition-transform active:scale-[0.98] hover:shadow-primary/40">
+<span class="relative z-10 flex items-center justify-center gap-2">
+                    Next Step
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</span>
+<!-- Button Glow Effect -->
+<div class="absolute inset-0 -z-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+</button>
+</div>
+</div>
+</body></html>

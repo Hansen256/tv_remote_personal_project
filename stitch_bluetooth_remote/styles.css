@@ -1,0 +1,59 @@
+/* External Styles for Bluetooth TV Remote */
+
+/* Material Icons - Font Size */
+.material-symbols-outlined {
+    font-size: 48px;
+}
+
+.material-symbols-outlined.icon-24 {
+    font-size: 24px;
+}
+
+/* Animation Delay for Pulse Elements */
+.pulse-delay {
+    animation-delay: 0.1s;
+}
+
+/* Signal Indicator */
+.signal-indicator {
+    width: var(--signal-width, 0%);
+    height: 100%;
+    background-color: #10b981;
+    border-radius: 0.375rem;
+    transition: width 0.3s ease;
+}
+
+/* Placeholder signal width for static example */
+.signal-indicator-placeholder {
+    width: 85%;
+}
+
+/* Background Image Utilities */
+.bg-image-remote {
+    background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDMny-KnPXJn4HGGOAryLICACqKUYsoz3fiROu1QHCy42tfDL81auj_gEibDcS9J1IRdd4z43McgDDVGXDQ_q7HpnmY6MXtq_kC9RuyBy9I-iECMuhL79qeTSY7TV3fHJ4Q78ilGtl5wZL1nSaJpQ8noI5m5H3lUQWgPD0ABzXTVGg0YNkxfPgYx0yfgZ54uqsmbPSjwvRZTtIDE78fvfge_-p2fkjrjgBatXkisK4HHohBVjjnuoMhhvFm-a8v3ebCqO6LNw712ec");
+}
+
+.bg-image-tech {
+    background-image: radial-gradient(#2b6cee 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.bg-image-device {
+    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBaqW43VP06nAYnveZmbl-8-qXHOXeoSORL2A_Sd59cCHRHbfogwvHwtHgI2SFMHPVS4A5K7ZBj6i4p3Dcwo1BRW1DlU-Oa3Ki7lAo7AstHLy13tQ8AED_aoI_zKSAYyW53IwaUkFx-78ea6TAfKIRujS3HExgubqr79njsJSJH1P_rAUy6uANAi6-IUKZIzl2Z_WfYqGdUnEgWz2e0YvngSfDiOT23ypMVUz89_8w9B2oVneRscoO8CPLtgzgfMWp1-v6JTk46pFk');
+}
+
+.bg-image-tech-dark {
+    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGs8S7oTxFVNrY0XHBVLexnWyd6mNkEWPr3I1k1Wjc0ltestleGK4otLx9Sw8hZljIuFTi9WVRr9_M2Dk-cq7MhcgkA7vVBg0Ehd3Hu0BmyAuj-bn1r-M9SVicCexwR21JHHhQU8g_U8lhFGaJqMCoYvrVkGxmgUDJu42fKj3IXeR010f8O1uYu1igDEcgJ8S4gf29ZnWqTVu35xcmeo6MRzJkEznC8XqjLMP9TtTQVhqtZVXxcv--IAdwjQWvxNFnhsLIzdTZbZE');
+}
+
+.bg-image-netflix {
+    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAlIGwoq-3EfU8hzBihQPieOdLT6LsAV__VRWYNDnFsirdCf4KLLyKbCZACjBeQ853ECz0lhlTKt-Txfx0BU3glprU1vdwU4agBj3wMJ8GpLWe8IkP0G-wHoPvEy2zqTAWpJenV2UZ-kVedM19VwYMiME_gGFlVwShUTSTbMCfJHeCihQMCuFI2usYmp2Kw7s3zCFl0YeSfcbJR1Z6xcOSXoEudH97OO3om8CXitY6URB79tan--_E_QwflKXcFwszLISIdAFcc92c');
+}
+
+.bg-image-prime {
+    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBNtRph3wFhsgMHhslIU0fbcKh3pOVeuC4XWF7qiLcbkOK-J-btI18dzoqXHNPFkCbJRUNlYBH_CtyuX0EGu19dAUKNrk0l_7aJE7XLpVQIprEq4bup-qgCxWrsq8ZgO9PXWgAIb9QE9gDLRjvIMx2MjKnpgiNpVRKXMjW297sbjoHBSUVazVlsIt2Ydli4l5H0DJPuVx5WSbX1hu-tAEB7DgCUyL6JUiWa4XJdU0XO2uPV_MvlwzY-2_uaMoLp2uLFaErslw5gIYc');
+}
+
+.bg-image-play {
+    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfy_RBj7M-Iji5kRhRtpoA3fqDBz92-BRuSYRxEcsTBbGZH76Xl08ulXo3Eb7UiahTDbk5zjR41QiK2_4MrcDbO21MqorBmpl_8KAhXD4aryUKFacZrANmw6Y8ZICK_LyeUhZe0vPdfjWOK9ULcVDU7Qjpm4smSPjah3sDWLXEiQEYH4FfFwMWsHBAPKbEpnh-zfWgarPUcBl3hBWl6Nv15J0MRdJ8Fh9aRgb9FiE5-gfMmLZMRcB6mZmlSs3jwAGePp_enh4ZZpQ');
+}

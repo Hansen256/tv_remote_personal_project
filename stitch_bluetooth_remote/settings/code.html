@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Noto+Sans:wght@300..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "Noto Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom range slider styling for cross-browser consistency */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2b6cee;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #282e39;
+            border-radius: 2px;
+        }
+        /* Dark mode specific override via CSS if needed, though Tailwind accent usually handles color */
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display overflow-x-hidden">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+<!-- Top App Bar -->
+<div class="flex items-center sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 justify-between border-b border-transparent dark:border-white/5">
+<div class="text-[#111418] dark:text-white flex size-12 shrink-0 items-center cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 rounded-full justify-center transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Settings</h2>
+</div>
+<!-- Spacer -->
+<div class="h-4"></div>
+<!-- Device Status Card -->
+<div class="px-4">
+<div class="flex items-stretch justify-between gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.1)] dark:shadow-[0_0_4px_rgba(0,0,0,0.2)]">
+<div class="flex flex-[2_2_0px] flex-col justify-center gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-lg font-bold leading-tight">Remote X-200</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500 text-[18px]">bluetooth_connected</span>
+<p class="text-[#637588] dark:text-[#9da6b9] text-sm font-medium leading-normal">Connected • 85%</p>
+</div>
+</div>
+<button class="flex min-w-[84px] max-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-[#f0f2f4] dark:bg-[#282e39] hover:bg-[#e2e4e8] dark:hover:bg-[#343a46] text-[#111418] dark:text-white text-sm font-medium leading-normal w-fit transition-colors">
+<span class="truncate">Disconnect</span>
+</button>
+</div>
+<div class="w-24 sm:w-32 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 aspect-square bg-image-remote" data-alt="Close up of a modern black remote control with blue led light"></div>
+</div>
+</div>
+<!-- Button Mapping Section -->
+<div class="pt-6">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-3">Customization</h3>
+<!-- Visual Map Image -->
+<div class="px-4 mb-4">
+<div class="w-full h-48 bg-[#e9ecef] dark:bg-[#1c1f27] rounded-xl flex items-center justify-center overflow-hidden relative">
+<div class="absolute inset-0 opacity-10 dark:opacity-20 bg-image-tech"></div>
+<img alt="Schematic wireframe diagram of a game controller" class="h-full w-auto object-contain mix-blend-multiply dark:mix-blend-lighten opacity-80" data-alt="Schematic wireframe diagram of a game controller" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkVGptYm-dNcxwE3d7jB0dIlYrzRkdkLQpJq2B96JT2UuX3oiWQVDV5XhPUHvotJqgtaozLgURa4RJFHt2Lr4NU5yVl04owkfGqasE844fJ3KDWY-qUe2eA5yLcTchl8sfVdZdUzkOrWOplXN3Y9KFJnCtGjDDN2Zw_vdAvd_60V1-tYoXIRgk3k4omx7HWAUazRXObFbq7yN30kmtgQS3Mw3XyMCpz1ZugBx1Gi-tsoxOloVVWPemGOBVIo9mfDiBpiWl3j5EVAY"/>
+</div>
+</div>
+<!-- Mapping List -->
+<div class="flex flex-col">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 px-4 min-h-[64px] py-2 justify-between border-b border-[#e5e7eb] dark:border-[#282e39] cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-[#111418] dark:text-white flex items-center justify-center rounded-lg bg-[#f0f2f4] dark:bg-[#282e39] shrink-0 size-10">
+<span class="material-symbols-outlined">smart_button</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">A Button</p>
+<p class="text-primary text-sm font-medium leading-normal line-clamp-2">Play / Pause</p>
+</div>
+</div>
+<div class="shrink-0 text-[#637588] dark:text-[#9da6b9]">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 px-4 min-h-[64px] py-2 justify-between border-b border-[#e5e7eb] dark:border-[#282e39] cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-[#111418] dark:text-white flex items-center justify-center rounded-lg bg-[#f0f2f4] dark:bg-[#282e39] shrink-0 size-10">
+<span class="material-symbols-outlined">cancel</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">B Button</p>
+<p class="text-[#637588] dark:text-[#9da6b9] text-sm font-normal leading-normal line-clamp-2">Back</p>
+</div>
+</div>
+<div class="shrink-0 text-[#637588] dark:text-[#9da6b9]">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-4 px-4 min-h-[64px] py-2 justify-between cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-[#111418] dark:text-white flex items-center justify-center rounded-lg bg-[#f0f2f4] dark:bg-[#282e39] shrink-0 size-10">
+<span class="material-symbols-outlined">stadia_controller</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">R Trigger</p>
+<p class="text-[#637588] dark:text-[#9da6b9] text-sm font-normal leading-normal line-clamp-2">Volume Up</p>
+</div>
+</div>
+<div class="shrink-0 text-[#637588] dark:text-[#9da6b9]">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<div class="h-2 bg-transparent"></div>
+<!-- Preferences Section -->
+<div class="pt-4">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2">Preferences</h3>
+<div class="flex flex-col bg-white dark:bg-[#1c1f27] sm:rounded-xl sm:mx-4 overflow-hidden shadow-sm">
+<!-- Haptic Feedback -->
+<div class="flex items-center justify-between px-4 py-4 border-b border-[#e5e7eb] dark:border-[#282e39]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#637588] dark:text-[#9da6b9]">vibration</span>
+<p class="text-[#111418] dark:text-white text-base font-medium">Haptic Feedback</p>
+</div>
+<!-- Active Toggle -->
+<div class="relative inline-flex h-7 w-12 items-center rounded-full bg-primary cursor-pointer transition-colors">
+<span class="translate-x-6 inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-sm"></span>
+</div>
+</div>
+<!-- Cursor Sensitivity -->
+<div class="flex flex-col gap-3 px-4 py-4 border-b border-[#e5e7eb] dark:border-[#282e39]">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#637588] dark:text-[#9da6b9]">speed</span>
+<p class="text-[#111418] dark:text-white text-base font-medium">Cursor Sensitivity</p>
+</div>
+<span class="text-sm font-medium text-primary">High</span>
+</div>
+<div class="w-full pt-1">
+<input class="w-full bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none h-1.5 cursor-pointer accent-primary" max="100" min="0" type="range" value="75" title="Cursor sensitivity slider"/>
+</div>
+</div>
+<!-- Invert Y-Axis -->
+<div class="flex items-center justify-between px-4 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#637588] dark:text-[#9da6b9]">swap_vert</span>
+<p class="text-[#111418] dark:text-white text-base font-medium">Invert Y-Axis</p>
+</div>
+<!-- Inactive Toggle -->
+<div class="relative inline-flex h-7 w-12 items-center rounded-full bg-slate-200 dark:bg-slate-700 cursor-pointer transition-colors">
+<span class="translate-x-1 inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-sm"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="flex flex-col items-center justify-center p-8 gap-4 mt-4">
+<button class="text-red-500 font-medium text-sm hover:underline">Reset to Defaults</button>
+<p class="text-[#637588] dark:text-[#9da6b9] text-xs">Version 2.4.0 (Build 302)</p>
+</div>
+<!-- Bottom Spacer -->
+<div class="h-8"></div>
+</div>
+</body></html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluetooth TV Remote</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/forms.min.js"></script>
+    
+    <!-- Material Symbols Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0..1,0">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        :root {
+            --color-primary: #2b6cee;
+            --color-background-light: #f6f6f8;
+            --color-background-dark: #101622;
+            --color-surface-dark: #1c212b;
+            --color-surface-light: #ffffff;
+        }
+        
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background-color: var(--color-background-dark);
+            color: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'opsz' 48;
+        }
+        
+        /* View Container */
+        #app {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .view-container {
+            width: 100%;
+            height: 100%;
+            display: none;
+            overflow-y: auto;
+            background-color: var(--color-background-dark);
+        }
+        
+        .view-container.active {
+            display: block;
+        }
+        
+        /* Button Feedback */
+        button.pressed {
+            transform: scale(0.95);
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .notification-success {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .notification-error {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .notification-info {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Custom Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            background-color: #4b5563;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch input {
+            display: none;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--color-primary);
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 12px;
+            transition: left 0.3s;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            left: 22px;
+        }
+        
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .ping-animation {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Device Card */
+        .device-card {
+            background-color: var(--color-surface-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .device-card.active {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 16px rgba(43, 108, 238, 0.3);
+        }
+        
+        /* Slider */
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(
+                to right,
+                var(--color-primary) 0%,
+                var(--color-primary) var(--slider-value),
+                rgba(255, 255, 255, 0.2) var(--slider-value),
+                rgba(255, 255, 255, 0.2) 100%
+            );
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .view-container {
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="dark bg-black text-white">
+    <div id="app">
+        
+        <!-- Onboarding View -->
+        <div id="onboarding" class="view-container">
+            <div class="h-screen flex flex-col justify-between p-6 max-w-md mx-auto">
+                <div class="flex justify-end">
+                    <button data-action="skip" class="text-gray-400 hover:text-white">Skip</button>
+                </div>
+                
+                <div class="flex-1 flex flex-col items-center justify-center">
+                    <!-- Carousel with slides -->
+                    <div class="w-full">
+                        <!-- Slide 1 -->
+                        <div data-slide="0" class="text-center">
+                            <div class="w-full h-64 bg-gradient-to-b from-blue-600 to-transparent rounded-2xl mb-8 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-6xl text-white">settings_remote</span>
+                            </div>
+                            <h2 class="text-3xl font-bold mb-4">Control Everything</h2>
+                            <p class="text-gray-400">Use your phone as a universal remote for your TV and devices</p>
+                        </div>
+                        
+                        <!-- Slide 2 (hidden by default) -->
+                        <div data-slide="1" class="hidden text-center">
+                            <div class="w-full h-64 bg-gradient-to-b from-green-600 to-transparent rounded-2xl mb-8 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-6xl text-white">bluetooth</span>
+                            </div>
+                            <h2 class="text-3xl font-bold mb-4">Instant Connection</h2>
+                            <p class="text-gray-400">Connect via Bluetooth for seamless control</p>
+                        </div>
+                        
+                        <!-- Slide 3 (hidden by default) -->
+                        <div data-slide="2" class="hidden text-center">
+                            <div class="w-full h-64 bg-gradient-to-b from-purple-600 to-transparent rounded-2xl mb-8 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-6xl text-white">tune</span>
+                            </div>
+                            <h2 class="text-3xl font-bold mb-4">Customize Your Experience</h2>
+                            <p class="text-gray-400">Personalize buttons and settings to your preference</p>
+                        </div>
+                        
+                        <!-- Slide 4 (hidden by default) -->
+                        <div data-slide="3" class="hidden text-center">
+                            <div class="w-full h-64 bg-gradient-to-b from-orange-600 to-transparent rounded-2xl mb-8 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-6xl text-white">check_circle</span>
+                            </div>
+                            <h2 class="text-3xl font-bold mb-4">You're Ready</h2>
+                            <p class="text-gray-400">Let's pair your first device</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pagination dots -->
+                <div class="flex justify-center gap-2 mb-8">
+                    <button data-slide-indicator="0" class="w-2 h-2 rounded-full bg-blue-600"></button>
+                    <button data-slide-indicator="1" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button data-slide-indicator="2" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button data-slide-indicator="3" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                </div>
+                
+                <button data-action="next-slide" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                    Next Step
+                </button>
+            </div>
+        </div>
+        
+        <!-- Device Connection View -->
+        <div id="device-connection" class="view-container">
+            <div class="p-6 max-w-md mx-auto">
+                <h1 class="text-2xl font-bold mb-8">Connect a Device</h1>
+                
+                <!-- Searching animation -->
+                <div data-scanning class="text-center mb-8 hidden">
+                    <div class="w-24 h-24 mx-auto mb-4 relative">
+                        <div class="absolute inset-0 border-2 border-gray-700 rounded-full animate-pulse"></div>
+                        <div class="absolute inset-2 border-2 border-gray-600 rounded-full animate-pulse pulse-delay"></div>
+                        <div class="flex items-center justify-center h-full">
+                            <span class="material-symbols-outlined text-4xl text-blue-600">radar</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">Searching for Remotes...</p>
+                </div>
+                
+                <!-- Discovered devices -->
+                <div data-discovered-devices class="space-y-3 mb-8">
+                    <!-- Devices will be rendered here -->
+                </div>
+                
+                <button data-action="connect" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition mb-4">
+                    Connect Device
+                </button>
+                
+                <button class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    Enter Code Manually
+                </button>
+            </div>
+        </div>
+        
+        <!-- Device List View -->
+        <div id="device-list" class="view-container">
+            <div class="p-6 max-w-md mx-auto pb-32">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-2xl font-bold">My Remotes</h1>
+                    <button data-action="edit-devices" class="text-blue-600 hover:text-blue-400">Edit</button>
+                </div>
+                
+                <!-- Active device -->
+                <div class="mb-8">
+                    <h3 class="text-sm font-semibold text-gray-400 mb-4">Active Device</h3>
+                    <div data-active-device>
+                        <!-- Active device card will be rendered here -->
+                    </div>
+                </div>
+                
+                <!-- Saved devices -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 mb-4">Saved Devices</h3>
+                    <div data-saved-devices class="space-y-2">
+                        <!-- Device list will be rendered here -->
+                    </div>
+                </div>
+                
+                <!-- Floating pair button -->
+                <button data-action="pair-new" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 max-w-xs w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                    + Pair New Device
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Remote Control View -->
+        <div id="main-remote" class="view-container">
+            <div class="p-6 max-w-md mx-auto">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 data-device-name class="text-xl font-bold">Remote</h1>
+                        <p data-connection-status class="text-xs text-gray-400">Connected</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-gray-400">Battery</div>
+                        <div class="w-8 h-5 border-2 border-gray-400 rounded relative">
+                            <div class="absolute top-0.5 left-0.5 right-0.5 h-3 bg-green-500 rounded-sm signal-indicator-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- D-Pad -->
+                <div class="flex justify-center mb-8">
+                    <div class="relative w-32 h-32">
+                        <button data-dpad-button="up" class="absolute top-0 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <span class="material-symbols-outlined text-lg">arrow_upward</span>
+                        </button>
+                        <button data-dpad-button="left" class="absolute top-12 left-0 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                        </button>
+                        <button data-dpad-button="center" class="absolute top-12 left-12 w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full transition flex items-center justify-center">
+                            <span class="material-symbols-outlined text-lg">check</span>
+                        </button>
+                        <button data-dpad-button="right" class="absolute top-12 left-24 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </button>
+                        <button data-dpad-button="down" class="absolute top-24 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                            <span class="material-symbols-outlined text-lg">arrow_downward</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick actions -->
+                <div class="grid grid-cols-3 gap-3 mb-8">
+                    <button data-quick-action="back" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                        <span class="material-symbols-outlined text-lg">arrow_back</span>
+                    </button>
+                    <button data-quick-action="home" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                        <span class="material-symbols-outlined text-lg">home</span>
+                    </button>
+                    <button data-quick-action="menu" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                        <span class="material-symbols-outlined text-lg">menu</span>
+                    </button>
+                </div>
+                
+                <!-- Volume control -->
+                <div class="mb-8">
+                    <label class="block text-sm font-semibold mb-2">Volume</label>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-lg">volume_down</span>
+                        <input type="range" data-volume-slider class="flex-1" min="0" max="100" value="50">
+                        <span class="material-symbols-outlined text-lg">volume_up</span>
+                    </div>
+                    <p class="text-xs text-gray-400 text-center mt-2">50%</p>
+                </div>
+                
+                <!-- Playback controls -->
+                <div class="mb-8">
+                    <div class="grid grid-cols-5 gap-2">
+                        <button data-playback-control="replay-10s" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">-10s</button>
+                        <button data-playback-control="previous" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
+                            <span class="material-symbols-outlined text-lg">skip_previous</span>
+                        </button>
+                        <button data-playback-control="play-pause" class="bg-blue-600 hover:bg-blue-700 py-2 rounded transition">
+                            <span class="material-symbols-outlined text-lg">play_arrow</span>
+                        </button>
+                        <button data-playback-control="next" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
+                            <span class="material-symbols-outlined text-lg">skip_next</span>
+                        </button>
+                        <button data-playback-control="forward-10s" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">+10s</button>
+                    </div>
+                </div>
+                
+                <!-- Shortcuts -->
+                <div class="mb-8">
+                    <div class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition text-center cursor-pointer">
+                        Netflix
+                    </div>
+                </div>
+                
+                <!-- Power button -->
+                <button data-power-button class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition">
+                    Power Off
+                </button>
+            </div>
+        </div>
+        
+        <!-- Settings View -->
+        <div id="settings" class="view-container">
+            <div class="p-6 max-w-md mx-auto pb-32">
+                <h1 class="text-2xl font-bold mb-8">Settings</h1>
+                
+                <!-- Device Status -->
+                <div class="device-card mb-8">
+                    <h3 class="font-semibold mb-2">Remote Status</h3>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400">Device</span>
+                        <span class="font-semibold">Remote X-200</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400">Connection</span>
+                        <span class="text-green-400">Connected</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Battery</span>
+                        <span>85%</span>
+                    </div>
+                </div>
+                
+                <!-- Settings -->
+                <div class="space-y-6">
+                    <!-- Haptic Feedback -->
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Haptic Feedback</h3>
+                            <p class="text-xs text-gray-400">Vibration on button press</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" data-setting="haptic-feedback" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <!-- Cursor Sensitivity -->
+                    <div>
+                        <h3 class="font-semibold mb-2">Cursor Sensitivity</h3>
+                        <input type="range" data-setting="cursor-sensitivity" class="w-full" min="0" max="100" value="75">
+                        <p class="text-xs text-gray-400 mt-1">75%</p>
+                    </div>
+                    
+                    <!-- Invert Y-Axis -->
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Invert Y-Axis</h3>
+                            <p class="text-xs text-gray-400">Flip up/down controls</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" data-setting="invert-y-axis">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Reset Button -->
+                <button data-action="reset-defaults" class="w-full mt-12 bg-red-900 hover:bg-red-800 text-white font-semibold py-3 rounded-lg transition">
+                    Reset to Defaults
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Modules -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

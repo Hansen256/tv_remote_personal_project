@@ -1,0 +1,20 @@
+{
+  "name": "stitch-bluetooth-remote",
+  "version": "0.1.0",
+  "description": "Google Stitch Bluetooth TV Remote Application",
+  "type": "module",
+  "main": "js/app.js",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bluetooth",
+    "remote",
+    "tv"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {}
+}

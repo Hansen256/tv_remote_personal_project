@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Device Connection</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1c212b",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white overflow-x-hidden font-display selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col group/design-root">
+<!-- Header -->
+<div class="sticky top-0 z-20 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-black/5 dark:border-white/5">
+<div class="flex items-center px-4 py-3 justify-between">
+<div class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-black dark:text-white icon-24">arrow_back</span>
+</div>
+<h2 class="text-[#111318] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">Add Device</h2>
+<div class="flex w-10 items-center justify-center">
+<span class="material-symbols-outlined text-[#9da6b9] icon-24">help</span>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<div class="flex-1 flex flex-col items-center w-full px-4 pb-32">
+<!-- Radar Visualizer (Hero) -->
+<div class="w-full flex flex-col items-center justify-center py-12">
+<div class="relative flex items-center justify-center size-56 mb-8">
+<!-- Concentric Circles for Radar Effect -->
+<div class="absolute inset-0 rounded-full border border-primary/20 scale-100"></div>
+<div class="absolute inset-8 rounded-full border border-primary/20 scale-90 opacity-80"></div>
+<div class="absolute inset-16 rounded-full border border-primary/30 scale-75 opacity-60"></div>
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-2xl"></div>
+<!-- Pulsing Core -->
+<div class="relative flex items-center justify-center size-24 bg-surface-dark rounded-full border border-primary shadow-[0_0_40px_-10px_rgba(43,108,238,0.4)] z-10">
+<span class="material-symbols-outlined text-primary text-5xl">bluetooth_searching</span>
+</div>
+</div>
+<h2 class="text-2xl font-bold text-center mb-2 tracking-tight">Searching for Remotes...</h2>
+<p class="text-[#9da6b9] text-center text-sm max-w-xs leading-relaxed font-body">
+                    Make sure your device is turned on and in pairing range.
+                </p>
+</div>
+<!-- Device List Section -->
+<div class="w-full max-w-md flex flex-col gap-4">
+<h3 class="text-[#111318] dark:text-white text-sm uppercase tracking-wider font-bold opacity-60 px-1">Available Devices</h3>
+<!-- Device Card 1 (Selected) -->
+<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border-2 border-primary shadow-lg shadow-primary/10 transition-all duration-200">
+<div class="flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-12">
+<span class="material-symbols-outlined text-primary">gamepad</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-[#111318] dark:text-white text-base font-bold leading-normal truncate">Pro Remote X1</p>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#9da6b9] text-[16px]">signal_cellular_alt</span>
+<p class="text-[#9da6b9] text-xs font-medium font-body">Strong Signal • 00:11:22:33:FF:EE</p>
+</div>
+</div>
+<div class="shrink-0 pl-2">
+<div class="size-6 rounded-full bg-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-white text-sm font-bold">check</span>
+</div>
+<input checked="" class="hidden" name="device_selection" type="radio"/>
+</div>
+</label>
+<!-- Device Card 2 (Unselected) -->
+<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border border-transparent hover:border-white/10 transition-all duration-200">
+<div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#282e39] shrink-0 size-12">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">bluetooth</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-[#111318] dark:text-white text-base font-medium leading-normal truncate">Unknown Device</p>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#9da6b9] text-[16px]">signal_cellular_alt_2_bar</span>
+<p class="text-[#9da6b9] text-xs font-medium font-body">Weak Signal • AA:BB:CC:DD:EE:FF</p>
+</div>
+</div>
+<div class="shrink-0 pl-2">
+<div class="size-6 rounded-full border-2 border-[#3e4554] bg-transparent group-hover:border-primary/50 transition-colors"></div>
+<input class="hidden" name="device_selection" type="radio"/>
+</div>
+</label>
+<!-- Device Card 3 (Unselected) -->
+<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border border-transparent hover:border-white/10 transition-all duration-200">
+<div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#282e39] shrink-0 size-12">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">tv_remote</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<p class="text-[#111318] dark:text-white text-base font-medium leading-normal truncate">Media Controller</p>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#9da6b9] text-[16px]">signal_cellular_alt_1_bar</span>
+<p class="text-[#9da6b9] text-xs font-medium font-body">Weak Signal • 12:34:56:78:90</p>
+</div>
+</div>
+<div class="shrink-0 pl-2">
+<div class="size-6 rounded-full border-2 border-[#3e4554] bg-transparent group-hover:border-primary/50 transition-colors"></div>
+<input class="hidden" name="device_selection" type="radio"/>
+</div>
+</label>
+</div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-xl border-t border-black/5 dark:border-white/5 z-30">
+<div class="max-w-md mx-auto w-full flex flex-col gap-4">
+<button class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-white shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-primary/40 active:scale-[0.98] transition-all duration-200">
+<span class="text-base font-bold tracking-wide">Connect Device</span>
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+<div class="flex items-center justify-center gap-1">
+<p class="text-[#9da6b9] text-sm">Can't find it?</p>
+<button class="text-primary text-sm font-bold hover:underline">Enter code manually</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

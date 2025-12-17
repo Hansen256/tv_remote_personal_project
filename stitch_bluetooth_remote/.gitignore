@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+.vscode/
+.env
+.env.local
+*.log
+npm-debug.log
+dist/
+build/
+.cache/
+plan-bluetoothTvRemote.prompt.md
