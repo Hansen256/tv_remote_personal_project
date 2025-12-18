@@ -1,0 +1,322 @@
+// Main Application Controller
+
+import { stateManager } from './state.js';
+import { bluetoothManager } from '../services/bluetooth.js';
+import { uiController } from '../ui/controller.js';
+import { VIEWS, REMOTE_COMMANDS, DEFAULT_SETTINGS } from './constants.js';
+
+class App {
+  constructor() {
+    this.initialized = false;
+  }
+  
+  /**
+   * Initialize the application
+   */
+  async init() {
+    console.log('Initializing Bluetooth Remote App...');
+    
+    try {
+      // Initialize UI system
+      await uiController.init();
+      
+      // Setup event listeners
+      this.setupEventListeners();
+      
+      // Navigate to initial view
+      const initialView = stateManager.getCurrentView();
+      stateManager.setCurrentView(initialView);
+      
+      // Setup Bluetooth listeners
+      this.setupBluetoothListeners();
+      
+      this.initialized = true;
+      console.log('App initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize app:', error);
+    }
+  }
+  
+  /**
+   * Setup UI event listeners
+   */
+  setupEventListeners() {
+    // Onboarding events
+    uiController.addEventListener('onboarding-complete', () => {
+      stateManager.completeOnboarding();
+    });
+    
+    // Device connection events
+    uiController.addEventListener('device-connect-requested', async () => {
+      await this.handleDeviceConnection();
+    });
+    
+    // Device list events
+    uiController.addEventListener('disconnect', async (detail) => {
+      await bluetoothManager.disconnect();
+    });
+    
+    // Remote control events
+    uiController.addEventListener('dpad-pressed', (detail) => {
+      this.handleDpadInput(detail.direction);
+    });
+    
+    uiController.addEventListener('action-pressed', (detail) => {
+      this.handleActionButton(detail.action);
+    });
+    
+    uiController.addEventListener('playback-control', (detail) => {
+      this.handlePlaybackControl(detail.control);
+    });
+    
+    uiController.addEventListener('volume-changed', (detail) => {
+      this.handleVolumeChange(detail.volume);
+    });
+    
+    uiController.addEventListener('power-pressed', () => {
+      this.handlePowerButton();
+    });
+    
+    // Settings events
+    uiController.addEventListener('reset-settings-requested', () => {
+      this.handleResetSettings();
+    });
+    
+    // Global keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      this.handleKeyboardInput(e);
+    });
+  }
+  
+  /**
+   * Setup Bluetooth event listeners
+   */
+  setupBluetoothListeners() {
+    // Listen to state changes
+    stateManager.subscribe((state) => {
+      // Handle Bluetooth status updates
+      if (state.connectionState) {
+        console.log('Connection state:', state.connectionState);
+      }
+    });
+  }
+  
+  /**
+   * Handle device connection flow
+   */
+  async handleDeviceConnection() {
+    try {
+      if (!bluetoothManager.isSupported) {
+        uiController.showNotification('Bluetooth not supported on this device', 'error');
+        return;
+      }
+      
+      // Request device
+      const device = await bluetoothManager.requestDevice();
+      console.log('Device selected:', device.name);
+      
+      // Connect to device
+      await bluetoothManager.connect();
+      
+      uiController.showNotification(`Connected to ${device.name}`, 'success');
+      stateManager.setCurrentView(VIEWS.DEVICE_LIST);
+    } catch (error) {
+      console.error('Connection error:', error);
+      uiController.showNotification('Failed to connect device', 'error');
+    }
+  }
+  
+  /**
+   * Handle D-pad input
+   */
+  async handleDpadInput(direction) {
+    const commands = {
+      'up': REMOTE_COMMANDS.UP,
+      'down': REMOTE_COMMANDS.DOWN,
+      'left': REMOTE_COMMANDS.LEFT,
+      'right': REMOTE_COMMANDS.RIGHT,
+      'center': REMOTE_COMMANDS.OK,
+    };
+    
+    const command = commands[direction];
+    if (command) {
+      await bluetoothManager.sendCommand(command);
+      this.applyButtonFeedback();
+    }
+  }
+  
+  /**
+   * Handle quick action buttons (back, home, menu)
+   */
+  async handleActionButton(action) {
+    const commands = {
+      'back': REMOTE_COMMANDS.BACK,
+      'home': REMOTE_COMMANDS.HOME,
+      'menu': REMOTE_COMMANDS.MENU,
+    };
+    
+    const command = commands[action];
+    if (command) {
+      await bluetoothManager.sendCommand(command);
+      this.applyButtonFeedback();
+    }
+  }
+  
+  /**
+   * Handle playback controls
+   */
+  async handlePlaybackControl(control) {
+    const commands = {
+      'replay-10s': REMOTE_COMMANDS.REPLAY_10S,
+      'previous': REMOTE_COMMANDS.PREVIOUS,
+      'play-pause': REMOTE_COMMANDS.PLAY,
+      'next': REMOTE_COMMANDS.NEXT,
+      'forward-10s': REMOTE_COMMANDS.FORWARD_10S,
+    };
+    
+    const command = commands[control];
+    if (command) {
+      await bluetoothManager.sendCommand(command);
+      this.applyButtonFeedback();
+    }
+  }
+  
+  /**
+   * Handle volume changes
+   */
+  async handleVolumeChange(volume) {
+    const commands = [];
+    
+    // Determine if volume increased or decreased
+    const state = stateManager.getState();
+    const lastVolume = state.lastCommand?.volume || 50;
+    
+    if (volume > lastVolume) {
+      commands.push(REMOTE_COMMANDS.VOLUME_UP);
+    } else if (volume < lastVolume) {
+      commands.push(REMOTE_COMMANDS.VOLUME_DOWN);
+    }
+    
+    if (commands.length > 0) {
+      await bluetoothManager.sendCommandSequence(commands);
+    }
+  }
+  
+  /**
+   * Handle power button
+   */
+  async handlePowerButton() {
+    // Confirm before powering off
+    if (confirm('Turn off the remote?')) {
+      await bluetoothManager.sendCommand(REMOTE_COMMANDS.POWER_OFF);
+      this.applyButtonFeedback();
+    }
+  }
+  
+  /**
+   * Handle settings reset
+   */
+  handleResetSettings() {
+    if (confirm('Reset all settings to defaults?')) {
+      // Restore default settings
+      Object.entries(DEFAULT_SETTINGS).forEach(([key, value]) => {
+        stateManager.updateUserSetting(key, value);
+      });
+      uiController.showNotification('Settings reset to defaults', 'info');
+    }
+  }
+  
+  /**
+   * Handle keyboard input for remote control
+   */
+  handleKeyboardInput(event) {
+    const currentView = stateManager.getCurrentView();
+    
+    // Only handle keyboard input for remote control view
+    if (currentView !== VIEWS.MAIN_REMOTE) {
+      return;
+    }
+    
+    const keyMap = {
+      'ArrowUp': { type: 'dpad', value: 'up' },
+      'ArrowDown': { type: 'dpad', value: 'down' },
+      'ArrowLeft': { type: 'dpad', value: 'left' },
+      'ArrowRight': { type: 'dpad', value: 'right' },
+      'Enter': { type: 'dpad', value: 'center' },
+      'Backspace': { type: 'action', value: 'back' },
+      'Home': { type: 'action', value: 'home' },
+      'm': { type: 'action', value: 'menu' },
+      'p': { type: 'playback', value: 'play-pause' },
+      'k': { type: 'power', value: 'off' },
+    };
+    
+    const mapping = keyMap[event.key];
+    if (mapping) {
+      event.preventDefault();
+      
+      switch (mapping.type) {
+        case 'dpad':
+          this.handleDpadInput(mapping.value);
+          break;
+        case 'action':
+          this.handleActionButton(mapping.value);
+          break;
+        case 'playback':
+          this.handlePlaybackControl(mapping.value);
+          break;
+        case 'power':
+          this.handlePowerButton();
+          break;
+      }
+    }
+  }
+  
+  /**
+   * Apply visual/haptic feedback for button press
+   */
+  applyButtonFeedback() {
+    const settings = stateManager.getUserSettings();
+    
+    // Visual feedback
+    const activeElement = document.activeElement;
+    if (activeElement) {
+      activeElement.classList.add('pressed');
+      setTimeout(() => activeElement.classList.remove('pressed'), 100);
+    }
+    
+    // Haptic feedback
+    if (settings.hapticFeedback && navigator.vibrate) {
+      navigator.vibrate(30); // 30ms vibration
+    }
+  }
+  
+  /**
+   * Navigate to view
+   */
+  navigateTo(viewName) {
+    stateManager.setCurrentView(viewName);
+  }
+  
+  /**
+   * Get current state
+   */
+  getState() {
+    return stateManager.getState();
+  }
+}
+
+// Initialize app when DOM is ready
+const app = new App();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    app.init();
+  });
+} else {
+  app.init();
+}
+
+// Export for debugging
+window.__app = app;
+window.__stateManager = stateManager;
+window.__bluetoothManager = bluetoothManager;

@@ -1,0 +1,24 @@
+/* CSS Variables & Design Tokens */
+
+:root {
+    --color-primary: #2b6cee;
+    --color-background-light: #f6f6f8;
+    --color-background-dark: #101622;
+    --color-surface-dark: #1c212b;
+    --color-surface-light: #ffffff;
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: var(--color-background-dark);
+    color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'opsz' 48;
+}

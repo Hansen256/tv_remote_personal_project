@@ -1,0 +1,7 @@
+/* Responsive Design & Media Queries */
+
+@media (max-width: 768px) {
+    .view-container {
+        height: 100%;
+    }
+}
