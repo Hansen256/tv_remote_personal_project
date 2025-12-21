@@ -163,15 +163,19 @@ class StateManager {
   }
   
   recordCommand(command) {
-    // Add new command and cap queue to MAX_COMMAND_QUEUE_SIZE
+    // Add new command with timestamp and cap queue to MAX_COMMAND_QUEUE_SIZE
     // Drops oldest entries (FIFO) when queue exceeds max
-    const updatedQueue = [...this.state.commandQueue, command];
+    const commandEntry = {
+      command,
+      timestamp: Date.now()
+    };
+    const updatedQueue = [...this.state.commandQueue, commandEntry];
     const trimmedQueue = updatedQueue.length > StateManager.MAX_COMMAND_QUEUE_SIZE
       ? updatedQueue.slice(-StateManager.MAX_COMMAND_QUEUE_SIZE)
       : updatedQueue;
     
     this.updateState({
-      lastCommand: command,
+      lastCommand: commandEntry,
       commandQueue: trimmedQueue
     });
   }

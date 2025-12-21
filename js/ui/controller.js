@@ -570,7 +570,7 @@ class UIController {
     if (deviceName && state.activeDeviceId) {
       const device = state.pairedDevices.find(d => d.id === state.activeDeviceId);
       if (device) {
-        deviceName.textContent = device.name || device.customName || 'Remote';
+        deviceName.textContent = device.customName || device.name || 'Remote';
       }
     }
     
@@ -667,11 +667,12 @@ class UIController {
       } else {
         // Show last 10 commands
         const recentCommands = state.commandQueue.slice(-10).reverse();
-        historyContainer.innerHTML = recentCommands.map((cmd, idx) => {
-          const timestamp = new Date().toLocaleTimeString();
+        historyContainer.innerHTML = recentCommands.map((entry) => {
+          const timestamp = new Date(entry.timestamp).toLocaleTimeString();
+          const command = entry.command || entry; // Fallback for old format
           return `<div class="text-xs py-1 border-b border-gray-700 last:border-0">
             <span class="text-gray-400">${timestamp}</span>
-            <span class="text-white ml-2">${cmd}</span>
+            <span class="text-white ml-2">${command}</span>
           </div>`;
         }).join('');
       }
