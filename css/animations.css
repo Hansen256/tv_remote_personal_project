@@ -28,3 +28,10 @@
         transform: rotate(360deg);
     }
 }
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .ping-animation {
+        animation: none;
+    }
+}

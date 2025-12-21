@@ -1,5 +1,15 @@
 // Application Constants
 
+// Deep freeze utility for nested objects
+function deepFreeze(obj) {
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      deepFreeze(obj[key]);
+    }
+  });
+  return Object.freeze(obj);
+}
+
 export const VIEWS = {
   ONBOARDING: 'onboarding',
   DEVICE_CONNECTION: 'device-connection',
@@ -48,6 +58,7 @@ export const REMOTE_COMMANDS = {
   // Media Control
   PLAY: 'play',
   PAUSE: 'pause',
+  PLAY_PAUSE: 'play-pause',
   PREVIOUS: 'previous',
   NEXT: 'next',
   REPLAY_10S: 'replay-10s',
@@ -56,7 +67,7 @@ export const REMOTE_COMMANDS = {
   // Volume
   VOLUME_UP: 'volume-up',
   VOLUME_DOWN: 'volume-down',
-  VOLUME_MUTE: 'mute',
+  VOLUME_MUTE: 'volume-mute',
   
   // Power
   POWER_OFF: 'power-off',
@@ -79,7 +90,7 @@ export const BATTERY_THRESHOLDS = {
 export const HAPTIC_PATTERNS = {
   BUTTON_PRESS: [30],           // Single short pulse for button press
   VOLUME_CHANGE: [20, 50, 20],  // Double pulse for volume adjustment
-  SUCCESS: [30, 50, 50, 50, 70], // Ascending pattern for successful connection
+  SUCCESS: [30, 100, 30, 100, 50], // Progressive success confirmation (vibrate/pause/vibrate/pause/vibrate)
   ERROR: [100, 50, 100],        // Warning pattern for errors
   LONG_PRESS: [50],             // Slightly longer for important actions
 };
@@ -88,3 +99,15 @@ export const HAPTIC_SETTINGS = {
   DEFAULT_INTENSITY: 1.0,       // Full intensity by default
   REDUCED_INTENSITY: 0.5,       // For reduced motion preference
 };
+
+// Freeze all exported objects to prevent runtime modifications
+deepFreeze(VIEWS);
+deepFreeze(CONNECTION_STATES);
+deepFreeze(STORAGE_KEYS);
+deepFreeze(DEFAULT_SETTINGS);
+deepFreeze(REMOTE_COMMANDS);
+Object.freeze(ONBOARDING_SLIDES); // Primitive, shallow freeze
+deepFreeze(DEVICE_FILTER_OPTIONS);
+deepFreeze(BATTERY_THRESHOLDS);
+deepFreeze(HAPTIC_PATTERNS);
+deepFreeze(HAPTIC_SETTINGS);

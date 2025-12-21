@@ -1,6 +1,1 @@
-/* CSS Import Manifest - Consolidates all project styles */
-
-@import url('./variables.css');
-@import url('./components.css');
-@import url('./animations.css');
-@import url('./responsive.css');
+/* CSS Import Manifest - Consolidated styles loaded via HTML links */

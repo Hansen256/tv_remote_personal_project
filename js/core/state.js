@@ -3,14 +3,19 @@
 import { STORAGE_KEYS, DEFAULT_SETTINGS, CONNECTION_STATES, VIEWS } from './constants.js';
 
 class StateManager {
+  // Configuration
+  static MAX_COMMAND_QUEUE_SIZE = 100;
+  
   constructor() {
+    const onboardingComplete = this.loadFromStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, false);
+    
     this.state = {
       // Current view
-      currentView: this.getOnboardingState() ? VIEWS.DEVICE_LIST : VIEWS.ONBOARDING,
+      currentView: onboardingComplete ? VIEWS.DEVICE_LIST : VIEWS.ONBOARDING,
       
       // Onboarding
       onboardingSlide: 0,
-      onboardingComplete: this.loadFromStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, false),
+      onboardingComplete: onboardingComplete,
       
       // Devices
       pairedDevices: this.loadFromStorage(STORAGE_KEYS.PAIRED_DEVICES, []),
@@ -32,6 +37,8 @@ class StateManager {
     };
     
     this.listeners = [];
+    this.isInitialized = false;
+    this.errorQueue = [];
   }
   
   // Getters
@@ -60,7 +67,8 @@ class StateManager {
   }
   
   getOnboardingState() {
-    return this.loadFromStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, false);
+    // Return in-memory state first, fall back to storage only if undefined/null
+    return this.state.onboardingComplete ?? this.loadFromStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, false);
   }
   
   getUserSettings() {
@@ -68,7 +76,8 @@ class StateManager {
   }
   
   getDeviceStatus(deviceId) {
-    return this.state.deviceStatus[deviceId] || {};
+    const status = this.state.deviceStatus[deviceId];
+    return status ? { ...status } : {};
   }
   
   // Setters
@@ -146,13 +155,21 @@ class StateManager {
   }
   
   recordCommand(command) {
+    // Add new command and cap queue to MAX_COMMAND_QUEUE_SIZE
+    // Drops oldest entries (FIFO) when queue exceeds max
+    const updatedQueue = [...this.state.commandQueue, command];
+    const trimmedQueue = updatedQueue.length > StateManager.MAX_COMMAND_QUEUE_SIZE
+      ? updatedQueue.slice(-StateManager.MAX_COMMAND_QUEUE_SIZE)
+      : updatedQueue;
+    
     this.updateState({
       lastCommand: command,
-      commandQueue: [...this.state.commandQueue, command]
+      commandQueue: trimmedQueue
     });
   }
   
   clearCommandQueue() {
+    // Clear all recorded commands from history
     this.updateState({ commandQueue: [] });
   }
   
@@ -203,8 +220,8 @@ class StateManager {
   // State Updates
   updateState(changes) {
     // Validate state changes
-    if (typeof changes !== 'object' || changes === null) {
-      console.error('Invalid state update: changes must be an object');
+    if (typeof changes !== 'object' || changes === null || Array.isArray(changes)) {
+      console.error('Invalid state update: changes must be a plain object');
       return;
     }
     
@@ -214,10 +231,34 @@ class StateManager {
   
   // Error Notifications
   notifyStorageError(message) {
+    // If initialization is not complete, queue the error for later dispatch
+    if (!this.isInitialized) {
+      this.errorQueue.push(message);
+      console.warn(`[Storage Error] ${message}`);
+      return;
+    }
+    
     // Dispatch custom event for UI to handle
     window.dispatchEvent(new CustomEvent('state:storage-error', {
       detail: { message }
     }));
+  }
+  
+  /**
+   * Flush queued storage errors after initialization completes
+   */
+  flushStorageErrors() {
+    this.isInitialized = true;
+    
+    // Dispatch all queued errors
+    this.errorQueue.forEach(message => {
+      window.dispatchEvent(new CustomEvent('state:storage-error', {
+        detail: { message }
+      }));
+    });
+    
+    // Clear the queue
+    this.errorQueue = [];
   }
   
   // Observer Pattern

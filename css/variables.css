@@ -6,12 +6,16 @@
     --color-background-dark: #101622;
     --color-surface-dark: #1c212b;
     --color-surface-light: #ffffff;
+    --color-success: #10b981;
+    --color-error: #ef4444;
+    --color-error-bg: rgba(239, 68, 68, 0.1);
+    --color-text-primary: #ffffff;
 }
 
 body {
     font-family: 'Noto Sans', sans-serif;
     background-color: var(--color-background-dark);
-    color: #ffffff;
+    color: var(--color-text-primary);
 }
 
 h1, h2, h3, h4, h5, h6 {

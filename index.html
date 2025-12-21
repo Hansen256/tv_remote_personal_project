@@ -17,7 +17,10 @@
     
     <!-- External Styles -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body class="dark bg-black text-white">
     <div id="app">
@@ -26,7 +29,7 @@
         <div id="onboarding" class="view-container">
             <div class="h-screen flex flex-col justify-between p-6 max-w-md mx-auto">
                 <div class="flex justify-end">
-                    <button data-action="skip" title="Skip onboarding tutorial" class="text-gray-400 hover:text-white">Skip</button>
+                    <button data-action="skip" title="Skip onboarding tutorial" class="text-gray-400 hover:text-white transition-all duration-150 active:scale-95">Skip</button>
                 </div>
                 
                 <div class="flex-1 flex flex-col items-center justify-center">
@@ -72,13 +75,13 @@
                 
                 <!-- Pagination dots -->
                 <div class="flex justify-center gap-2 mb-8">
-                    <button data-slide-indicator="0" title="Go to onboarding slide one" class="w-2 h-2 rounded-full bg-blue-600"></button>
-                    <button data-slide-indicator="1" title="Go to onboarding slide two" class="w-2 h-2 rounded-full bg-gray-600"></button>
-                    <button data-slide-indicator="2" title="Go to onboarding slide three" class="w-2 h-2 rounded-full bg-gray-600"></button>
-                    <button data-slide-indicator="3" title="Go to onboarding slide four" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button data-slide-indicator="0" title="Go to onboarding slide one" class="w-2 h-2 rounded-full bg-blue-600 transition-all duration-150 active:scale-95 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400"></button>
+                    <button data-slide-indicator="1" title="Go to onboarding slide two" class="w-2 h-2 rounded-full bg-gray-600 transition-all duration-150 active:scale-95 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400"></button>
+                    <button data-slide-indicator="2" title="Go to onboarding slide three" class="w-2 h-2 rounded-full bg-gray-600 transition-all duration-150 active:scale-95 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400"></button>
+                    <button data-slide-indicator="3" title="Go to onboarding slide four" class="w-2 h-2 rounded-full bg-gray-600 transition-all duration-150 active:scale-95 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400"></button>
                 </div>
                 
-                <button data-action="next-slide" title="Continue to next onboarding step" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                <button data-action="next-slide" title="Continue to next onboarding step" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                     Next Step
                 </button>
             </div>
@@ -90,7 +93,7 @@
                 <h1 class="text-2xl font-bold mb-8">Connect a Device</h1>
                 
                 <!-- Searching animation -->
-                <div data-scanning class="text-center mb-8 hidden">
+                <div data-scanning class="text-center mb-8 hidden" role="status" aria-busy="true" aria-live="polite">
                     <div class="w-24 h-24 mx-auto mb-4 relative">
                         <div class="absolute inset-0 border-2 border-gray-700 rounded-full animate-pulse"></div>
                         <div class="absolute inset-2 border-2 border-gray-600 rounded-full animate-pulse pulse-delay"></div>
@@ -106,11 +109,11 @@
                     <!-- Devices will be rendered here -->
                 </div>
                 
-                <button data-action="connect" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition mb-4">
+                <button data-action="connect" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95 mb-4">
                     Connect Device
                 </button>
                 
-                <button class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                <button class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                     Enter Code Manually
                 </button>
             </div>
@@ -121,7 +124,7 @@
             <div class="p-6 max-w-md mx-auto pb-32">
                 <div class="flex justify-between items-center mb-8">
                     <h1 class="text-2xl font-bold">My Remotes</h1>
-                    <button data-action="edit-devices" class="text-blue-600 hover:text-blue-400">Edit</button>
+                    <button data-action="edit-devices" class="text-blue-600 hover:text-blue-400 transition-all duration-150 active:scale-95">Edit</button>
                 </div>
                 
                 <!-- Active device -->
@@ -141,7 +144,7 @@
                 </div>
                 
                 <!-- Floating pair button -->
-                <button data-action="pair-new" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 max-w-xs w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                <button data-action="pair-new" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 max-w-xs w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                     + Pair New Device
                 </button>
             </div>
@@ -297,9 +300,20 @@
                 </div>
                 
                 <!-- Reset Button -->
-                <button data-action="reset-defaults" title="Reset all settings to default values" class="w-full mt-12 bg-red-900 hover:bg-red-800 text-white font-semibold py-3 rounded-lg transition">
+                <button data-action="reset-defaults" title="Reset all settings to default values" class="w-full mt-12 bg-red-900 hover:bg-red-800 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                     Reset to Defaults
                 </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="modal-message">
+        <div class="bg-gray-800 p-6 rounded-lg max-w-sm w-full mx-4 shadow-lg">
+            <p id="modal-message" class="text-white mb-4"></p>
+            <div class="flex justify-end space-x-2">
+                <button id="modal-cancel" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded transition" tabindex="0">Cancel</button>
+                <button id="modal-confirm" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded transition" tabindex="0">Confirm</button>
             </div>
         </div>
     </div>

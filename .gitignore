@@ -8,8 +8,9 @@ npm-debug.log
 dist/
 build/
 .cache/
-*.github/prompts
-.github/copilot-instructions.md
+.github/prompts/.github/copilot-instructions.md
 .github/prompts/plan-standardizeProjectStructure.prompt.md
 .gitignore
 REORGANIZATION_COMPLETE.md
+MANIFEST.md
+

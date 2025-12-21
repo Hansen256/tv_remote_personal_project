@@ -56,7 +56,7 @@ export const REMOTE_COMMANDS = {
   // Volume
   VOLUME_UP: 'volume-up',
   VOLUME_DOWN: 'volume-down',
-  VOLUME_MUTE: 'mute',
+  VOLUME_MUTE: 'volume-mute',
   
   // Power
   POWER_OFF: 'power-off',

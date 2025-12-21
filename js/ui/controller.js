@@ -3,11 +3,19 @@
 import { stateManager } from '../core/state.js';
 import { VIEWS } from '../core/constants.js';
 
+const SLIDE_COUNT = 4;
+
 class UIController {
   constructor() {
     this.currentView = null;
     this.viewContainers = {};
     this.viewScripts = {};
+    this.notificationContainer = null;
+    this.previousViewState = null;
+    this.modal = document.getElementById('confirmation-modal');
+    this.modalMessage = document.getElementById('modal-message');
+    this.modalCancel = document.getElementById('modal-cancel');
+    this.modalConfirm = document.getElementById('modal-confirm');
   }
   
   /**
@@ -37,8 +45,32 @@ class UIController {
       this.navigateToView(state.currentView);
     }
     
-    // Update view-specific UI based on state
-    this.updateActiveView(state);
+    // Update view-specific UI based on state only if relevant state changed
+    const currentViewState = this.getViewState(state);
+    if (JSON.stringify(currentViewState) !== JSON.stringify(this.previousViewState)) {
+      this.updateActiveView(state);
+      this.previousViewState = currentViewState;
+    }
+  }
+  
+  /**
+   * Get the state slice relevant to the current view
+   */
+  getViewState(state) {
+    switch (this.currentView) {
+      case VIEWS.ONBOARDING:
+        return { onboardingSlide: state.onboardingSlide };
+      case VIEWS.DEVICE_CONNECTION:
+        return { discoveredDevices: state.discoveredDevices, isScanning: state.isScanning };
+      case VIEWS.DEVICE_LIST:
+        return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState };
+      case VIEWS.MAIN_REMOTE:
+        return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState };
+      case VIEWS.SETTINGS:
+        return { settings: state.settings };
+      default:
+        return {};
+    }
   }
   
   /**
@@ -112,6 +144,9 @@ class UIController {
     const container = this.viewContainers[VIEWS.ONBOARDING];
     if (!container) return;
     
+    // Return early if already initialized to prevent duplicate listeners
+    if (this._onboardingInitialized) return;
+    
     // Setup skip button
     const skipBtn = container.querySelector('[data-action="skip"]');
     if (skipBtn) {
@@ -126,7 +161,7 @@ class UIController {
       nextBtn.addEventListener('click', () => {
         const state = stateManager.getState();
         const nextSlide = state.onboardingSlide + 1;
-        if (nextSlide >= 4) {
+        if (nextSlide >= SLIDE_COUNT) {
           stateManager.completeOnboarding();
         } else {
           stateManager.setOnboardingSlide(nextSlide);
@@ -141,6 +176,9 @@ class UIController {
         stateManager.setOnboardingSlide(index);
       });
     });
+    
+    // Mark as initialized
+    this._onboardingInitialized = true;
   }
   
   updateOnboarding(state) {
@@ -165,6 +203,9 @@ class UIController {
     const container = this.viewContainers[VIEWS.DEVICE_CONNECTION];
     if (!container) return;
     
+    // Return early if already initialized to prevent duplicate listeners
+    if (this._deviceConnectionInitialized) return;
+    
     // Setup device selection radio buttons
     const deviceRadios = container.querySelectorAll('[data-device-radio]');
     deviceRadios.forEach(radio => {
@@ -186,6 +227,9 @@ class UIController {
         this.dispatchEvent('device-connect-requested');
       });
     }
+    
+    // Mark as initialized
+    this._deviceConnectionInitialized = true;
   }
   
   updateDeviceConnection(state) {
@@ -210,11 +254,28 @@ class UIController {
     devices.forEach(device => {
       const deviceEl = document.createElement('div');
       deviceEl.className = 'device-item';
-      deviceEl.innerHTML = `
-        <input type="radio" name="device" value="${device.id}" data-device-radio data-device-name="${device.name}" />
-        <label>${device.name}</label>
-        <div class="signal-indicator" style="--signal-width: ${device.signal}%"></div>
-      `;
+      
+      // Create input element
+      const input = document.createElement('input');
+      input.setAttribute('type', 'radio');
+      input.setAttribute('name', 'device');
+      input.setAttribute('value', String(device.id));
+      input.setAttribute('data-device-radio', '');
+      input.dataset.deviceName = device.name;
+      deviceEl.appendChild(input);
+      
+      // Create label element
+      const label = document.createElement('label');
+      label.textContent = device.name;
+      deviceEl.appendChild(label);
+      
+      // Create signal indicator element
+      const signalIndicator = document.createElement('div');
+      signalIndicator.className = 'signal-indicator';
+      const signalValue = Number(device.signal) || 0;
+      signalIndicator.style.width = `${signalValue}%`;
+      deviceEl.appendChild(signalIndicator);
+      
       fragment.appendChild(deviceEl);
     });
     container.innerHTML = '';
@@ -225,6 +286,9 @@ class UIController {
   initDeviceList() {
     const container = this.viewContainers[VIEWS.DEVICE_LIST];
     if (!container) return;
+    
+    // Return early if already initialized to prevent duplicate listeners
+    if (this._deviceListInitialized) return;
     
     // Setup edit button
     const editBtn = container.querySelector('[data-action="edit-devices"]');
@@ -255,6 +319,9 @@ class UIController {
         }
       });
     }
+    
+    // Mark as initialized
+    this._deviceListInitialized = true;
   }
   
   updateDeviceList(state) {
@@ -266,15 +333,48 @@ class UIController {
     if (activeDeviceCard && state.activeDeviceId) {
       const device = state.pairedDevices.find(d => d.id === state.activeDeviceId);
       if (device) {
-        activeDeviceCard.innerHTML = `
-          <div class="device-card active">
-            <h3>${device.name}</h3>
-            <p class="connection-status">${state.connectionState}</p>
-            <div class="ping-animation"></div>
-            <button data-action="locate-device">Locate</button>
-            <button data-action="disconnect">Disconnect</button>
-          </div>
-        `;
+        // Clear existing content
+        activeDeviceCard.innerHTML = '';
+        
+        // Create device card
+        const deviceCard = document.createElement('div');
+        deviceCard.className = 'device-card active';
+        
+        // Create and add device name
+        const deviceName = document.createElement('h3');
+        deviceName.textContent = device.name;
+        deviceCard.appendChild(deviceName);
+        
+        // Create and add connection status
+        const connectionStatus = document.createElement('p');
+        connectionStatus.className = 'connection-status';
+        connectionStatus.textContent = state.connectionState;
+        deviceCard.appendChild(connectionStatus);
+        
+        // Create and add ping animation
+        const pingAnimation = document.createElement('div');
+        pingAnimation.className = 'ping-animation';
+        deviceCard.appendChild(pingAnimation);
+        
+        // Create and add locate device button
+        const locateBtn = document.createElement('button');
+        locateBtn.setAttribute('data-action', 'locate-device');
+        locateBtn.textContent = 'Locate';
+        locateBtn.addEventListener('click', () => {
+          console.log('Locate device:', device.name);
+        });
+        deviceCard.appendChild(locateBtn);
+        
+        // Create and add disconnect button
+        const disconnectBtn = document.createElement('button');
+        disconnectBtn.setAttribute('data-action', 'disconnect');
+        disconnectBtn.textContent = 'Disconnect';
+        disconnectBtn.addEventListener('click', () => {
+          this.dispatchEvent('disconnect', { deviceId: device.id });
+        });
+        deviceCard.appendChild(disconnectBtn);
+        
+        activeDeviceCard.appendChild(deviceCard);
       }
     }
     
@@ -290,15 +390,33 @@ class UIController {
     devices.forEach(device => {
       const deviceEl = document.createElement('div');
       deviceEl.className = 'device-list-item';
-      deviceEl.innerHTML = `
-        <div class="device-info">
-          <h4>${device.name}</h4>
-          <p>${device.connected ? 'Connected' : 'Offline'}</p>
-        </div>
-        <button data-action="select-device" data-device-id="${device.id}">
-          <span class="material-symbols-outlined">chevron_right</span>
-        </button>
-      `;
+      
+      // Create device info section
+      const deviceInfo = document.createElement('div');
+      deviceInfo.className = 'device-info';
+      
+      const deviceName = document.createElement('h4');
+      deviceName.textContent = device.name;
+      deviceInfo.appendChild(deviceName);
+      
+      const status = document.createElement('p');
+      status.textContent = device.connected ? 'Connected' : 'Offline';
+      deviceInfo.appendChild(status);
+      
+      deviceEl.appendChild(deviceInfo);
+      
+      // Create button
+      const button = document.createElement('button');
+      button.setAttribute('data-action', 'select-device');
+      button.setAttribute('data-device-id', String(device.id));
+      
+      const icon = document.createElement('span');
+      icon.className = 'material-symbols-outlined';
+      icon.textContent = 'chevron_right';
+      button.appendChild(icon);
+      
+      deviceEl.appendChild(button);
+      
       fragment.appendChild(deviceEl);
     });
     container.innerHTML = '';
@@ -309,6 +427,9 @@ class UIController {
   initMainRemote() {
     const container = this.viewContainers[VIEWS.MAIN_REMOTE];
     if (!container) return;
+    
+    // Return early if already initialized to prevent duplicate listeners
+    if (this._mainRemoteInitialized) return;
     
     // Setup D-pad buttons
     const dpadButtons = container.querySelectorAll('[data-dpad-button]');
@@ -353,6 +474,9 @@ class UIController {
         this.dispatchEvent('power-pressed', {});
       });
     }
+    
+    // Mark as initialized
+    this._mainRemoteInitialized = true;
   }
   
   updateMainRemote(state) {
@@ -379,6 +503,9 @@ class UIController {
   initSettings() {
     const container = this.viewContainers[VIEWS.SETTINGS];
     if (!container) return;
+    
+    // Return early if already initialized to prevent duplicate listeners
+    if (this._settingsInitialized) return;
     
     // Setup haptic feedback toggle
     const hapticToggle = container.querySelector('[data-setting="haptic-feedback"]');
@@ -411,6 +538,9 @@ class UIController {
         this.dispatchEvent('reset-settings-requested', {});
       });
     }
+    
+    // Mark as initialized
+    this._settingsInitialized = true;
   }
   
   updateSettings(state) {
@@ -440,28 +570,95 @@ class UIController {
   }
   
   addEventListener(eventName, handler) {
-    window.addEventListener(`ui:${eventName}`, (e) => handler(e.detail));
+    const boundHandler = (e) => handler(e.detail);
+    window.addEventListener(`ui:${eventName}`, boundHandler);
+    return () => window.removeEventListener(`ui:${eventName}`, boundHandler);
+  }
+  
+  /**
+   * Get or create notification container for stacking
+   */
+  getNotificationContainer() {
+    if (!this.notificationContainer) {
+      this.notificationContainer = document.createElement('div');
+      this.notificationContainer.id = 'notification-container';
+      this.notificationContainer.style.position = 'fixed';
+      this.notificationContainer.style.top = '16px';
+      this.notificationContainer.style.right = '16px';
+      this.notificationContainer.style.zIndex = '9999';
+      this.notificationContainer.style.display = 'flex';
+      this.notificationContainer.style.flexDirection = 'column';
+      this.notificationContainer.style.gap = '8px';
+      this.notificationContainer.style.pointerEvents = 'none';
+      document.body.appendChild(this.notificationContainer);
+    }
+    return this.notificationContainer;
   }
   
   showNotification(message, type = 'info') {
     try {
-      // Simple notification system
+      // Create notification element
       const notification = document.createElement('div');
       notification.className = `notification notification-${type}`;
       notification.textContent = message;
       notification.setAttribute('role', 'alert');
-      notification.setAttribute('aria-live', 'polite');
+      notification.style.pointerEvents = 'auto';
       
-      document.body.appendChild(notification);
+      // Add to stacked container
+      const container = this.getNotificationContainer();
+      container.appendChild(notification);
       
+      // Remove notification after timeout
       setTimeout(() => {
         notification.remove();
       }, 3000);
     } catch (error) {
       console.error('Failed to show notification:', error);
       // Fallback to console if DOM manipulation fails
-      console.warn(`[${type.toUpperCase()}] ${message}`);
+      console[type === 'error' ? 'error' : 'warn'](`[${type.toUpperCase()}] ${message}`);
     }
+  }
+  
+  /**
+   * Show confirmation modal
+   */
+  showConfirmation(message) {
+    return new Promise((resolve) => {
+      this.modalMessage.textContent = message;
+      this.modal.classList.remove('hidden');
+      
+      const handleConfirm = () => {
+        cleanup();
+        resolve(true);
+      };
+      
+      const handleCancel = () => {
+        cleanup();
+        resolve(false);
+      };
+      
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          handleCancel();
+        } else if (e.key === 'Enter') {
+          handleConfirm();
+        }
+      };
+      
+      const cleanup = () => {
+        this.modal.classList.add('hidden');
+        this.modalCancel.removeEventListener('click', handleCancel);
+        this.modalConfirm.removeEventListener('click', handleConfirm);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+      
+      this.modalCancel.addEventListener('click', handleCancel);
+      this.modalConfirm.addEventListener('click', handleConfirm);
+      document.addEventListener('keydown', handleKeyDown);
+      
+      // Focus the cancel button by default
+      this.modalCancel.focus();
+    });
   }
 }
 

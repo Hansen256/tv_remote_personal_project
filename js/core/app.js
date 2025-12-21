@@ -8,6 +8,7 @@ import { VIEWS, REMOTE_COMMANDS, DEFAULT_SETTINGS, HAPTIC_PATTERNS, HAPTIC_SETTI
 class App {
   constructor() {
     this.initialized = false;
+    this.keyboardListener = null;
   }
   
   /**
@@ -20,12 +21,15 @@ class App {
       // Initialize UI system
       await uiController.init();
       
+      // Flush any storage errors that occurred during construction
+      stateManager.flushStorageErrors();
+      
       // Setup event listeners
       this.setupEventListeners();
       
-      // Navigate to initial view
-      const initialView = stateManager.getCurrentView();
-      stateManager.setCurrentView(initialView);
+      // Trigger initial view navigation by re-setting the current view,
+      // which notifies UI subscribers and renders the initial screen
+      stateManager.setCurrentView(stateManager.getCurrentView());
       
       // Setup Bluetooth listeners
       this.setupBluetoothListeners();
@@ -82,11 +86,6 @@ class App {
       this.handleResetSettings();
     });
     
-    // Global keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      this.handleKeyboardInput(e);
-    });
-    
     // Storage error notifications
     window.addEventListener('state:storage-error', (e) => {
       uiController.showNotification(e.detail.message, 'error');
@@ -102,6 +101,19 @@ class App {
       // Handle Bluetooth status updates
       if (state.connectionState) {
         console.log('Connection state:', state.connectionState);
+      }
+      
+      // Manage keyboard listener based on current view
+      if (state.currentView === VIEWS.MAIN_REMOTE) {
+        if (!this.keyboardListener) {
+          this.keyboardListener = (e) => this.handleKeyboardInput(e);
+          document.addEventListener('keydown', this.keyboardListener);
+        }
+      } else {
+        if (this.keyboardListener) {
+          document.removeEventListener('keydown', this.keyboardListener);
+          this.keyboardListener = null;
+        }
       }
     });
   }
@@ -152,9 +164,8 @@ class App {
         this.applyButtonFeedback();
       } catch (error) {
         console.error('Failed to send command:', error);
-        uiController.showNotification('Device disconnected. Reconnecting...', 'error');
-      }
-    }
+        uiController.showNotification('Device disconnected. Please reconnect.', 'error');
+      }    }
   }
   
   /**
@@ -234,8 +245,8 @@ class App {
    * Handle power button
    */
   async handlePowerButton() {
-    // Confirm before powering off
-    if (confirm('Turn off the remote?')) {
+    const confirmed = await uiController.showConfirmation('Turn off the remote?');
+    if (confirmed) {
       await bluetoothManager.sendCommand(REMOTE_COMMANDS.POWER_OFF);
       this.applyButtonFeedback(HAPTIC_PATTERNS.LONG_PRESS);
     }
@@ -244,8 +255,9 @@ class App {
   /**
    * Handle settings reset
    */
-  handleResetSettings() {
-    if (confirm('Reset all settings to defaults?')) {
+  async handleResetSettings() {
+    const confirmed = await uiController.showConfirmation('Reset all settings to defaults?');
+    if (confirmed) {
       // Restore default settings
       Object.entries(DEFAULT_SETTINGS).forEach(([key, value]) => {
         stateManager.updateUserSetting(key, value);
@@ -310,16 +322,19 @@ class App {
       return;
     }
     
+    // Normalize pattern to array
+    const normalizedPattern = Array.isArray(pattern) ? pattern : [pattern];
+    
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
       // Use reduced intensity for accessibility
-      const reducedPattern = pattern.map(duration => 
+      const reducedPattern = normalizedPattern.map(duration => 
         Math.floor(duration * HAPTIC_SETTINGS.REDUCED_INTENSITY)
       );
       navigator.vibrate(reducedPattern);
     } else {
-      navigator.vibrate(pattern);
+      navigator.vibrate(normalizedPattern);
     }
   }
   
@@ -364,6 +379,7 @@ if (document.readyState === 'loading') {
   app.init();
 }
 
+// TODO: Remove debug exports before production deployment to avoid exposing internal objects
 // Export for debugging
 window.__app = app;
 window.__stateManager = stateManager;

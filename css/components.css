@@ -53,14 +53,23 @@ button:disabled,
     animation: spin 0.6s linear infinite;
 }
 
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Error State */
 .error-state {
-    border-color: #ef4444 !important;
-    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--color-error);
+    background-color: var(--color-error-bg);
 }
 
 .error-text {
-    color: #ef4444;
+    color: var(--color-error);
     font-size: 12px;
     margin-top: 4px;
 }
@@ -78,12 +87,12 @@ button:disabled,
 }
 
 .notification-success {
-    background-color: #10b981;
+    background-color: var(--color-success, #10b981);
     color: white;
 }
 
 .notification-error {
-    background-color: #ef4444;
+    background-color: var(--color-error, #ef4444);
     color: white;
 }
 
@@ -109,6 +118,7 @@ button:disabled,
 
 .toggle-switch input:checked + .toggle-slider {
     background-color: var(--color-primary);
+    left: 22px;
 }
 
 .toggle-slider {
@@ -122,15 +132,11 @@ button:disabled,
     transition: left 0.3s;
 }
 
-.toggle-switch input:checked + .toggle-slider {
-    left: 22px;
-}
-
 .ping-animation {
     display: inline-block;
     width: 12px;
     height: 12px;
-    background-color: #10b981;
+    background-color: var(--color-success, #10b981);
     border-radius: 50%;
     animation: pulse 2s infinite;
 }

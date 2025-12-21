@@ -1,7 +1,28 @@
 /* Responsive Design & Media Queries */
 
+/* Ensures .view-container takes full viewport height on mobile screens (<=768px) to allow full-viewport stacking and fix potential scrollbar/layout issues */
+
 @media (max-width: 768px) {
     .view-container {
         height: 100%;
+    }
+
+    /* Mobile-specific adjustments for better usability */
+    button {
+        min-height: 44px; /* Ensure adequate touch targets */
+        padding: 12px 16px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    input[type="range"] {
+        height: 40px; /* Larger slider for easier interaction */
+    }
+
+    h1 {
+        font-size: 24px; /* Slightly smaller headings on mobile */
+    }
+
+    h2, h3 {
+        font-size: 20px;
     }
 }

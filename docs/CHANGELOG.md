@@ -2,7 +2,7 @@
 
 All notable changes to the TV Remote Bluetooth project will be documented in this file.
 
-## [Unreleased]-
+## [Unreleased]
 
 ### Added
 
@@ -22,6 +22,42 @@ All notable changes to the TV Remote Bluetooth project will be documented in thi
 - Storage error notification system for localStorage failures and corrupted data
 - Error handling for all Bluetooth command operations
 - Contextual error messages with actionable user guidance
+- Custom confirmation modal with keyboard navigation and accessibility support
+- Mobile-specific CSS rules in responsive.css for improved touch interactions
+- CSS variables for consistent color theming (--color-text-primary)
+- Parallel CSS loading optimization by removing @import statements
+- Deep freezing of all constant objects to prevent runtime mutations
+- Operation guards in Bluetooth manager to prevent concurrent operations
+- Conditional keyboard event listener management based on current view
+- TODO comment for removing debug exports before production deployment
+
+### Changed
+
+- Reorganized JavaScript modules into feature-based folders (core/, services/, ui/)
+- Standardized view component folder naming to kebab-case
+- Improved CSS organization with variables, components, animations, and responsive files
+- Unified all button press feedback to `active:scale-95` with consistent 150ms transition timing
+- Enhanced button `.pressed` class with explicit 150ms transition
+- Updated all remote control buttons in index.html with standardized `transition-all duration-150`
+- Improved `applyButtonFeedback()` method to accept dynamic haptic patterns
+- Refactored `sendCommand()` to throw errors instead of silently returning false
+- Enhanced error messages in Bluetooth operations with specific failure reasons
+- Updated `showNotification()` with error handling and accessibility attributes (role="alert", aria-live)
+- Added validation to StateManager `updateState()` method
+- Improved localStorage error recovery with automatic corrupted data cleanup
+- Replaced hard-coded colors in components.css with CSS variables
+- Added prefers-reduced-motion support to pulse animation keyframes
+- Optimized state change handling in UI controller to reduce unnecessary re-renders
+- Moved confirmation modal logic from app.js to uiController.js for better separation of concerns
+- Updated MANIFEST.md with detailed package.json clarification, view injection process, and deployment guidance
+
+### Fixed
+
+- Bluetooth disconnection handling now properly attempts reconnection
+- Missing error notifications for command failures now display to users
+- Storage quota exceeded errors now show actionable messages
+- Reconnection timeout cleanup on manual disconnect
+- Missing transition properties on button press feedback
 
 ### Changed
 
@@ -309,7 +345,7 @@ All commands are defined in `js/core/constants.js` in the `REMOTE_COMMANDS` obje
 | --------- | ---------- | --------- |
 | volume-up | VOLUME_UP | Increase volume |
 | volume-down | VOLUME_DOWN | Decrease volume |
-| mute | VOLUME_MUTE | Toggle mute |
+| volume-mute | VOLUME_MUTE | Toggle mute |
 
 ### Power Commands
 
