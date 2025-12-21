@@ -26,7 +26,7 @@
         <div id="onboarding" class="view-container">
             <div class="h-screen flex flex-col justify-between p-6 max-w-md mx-auto">
                 <div class="flex justify-end">
-                    <button data-action="skip" class="text-gray-400 hover:text-white">Skip</button>
+                    <button data-action="skip" title="Skip onboarding tutorial" class="text-gray-400 hover:text-white">Skip</button>
                 </div>
                 
                 <div class="flex-1 flex flex-col items-center justify-center">
@@ -72,13 +72,13 @@
                 
                 <!-- Pagination dots -->
                 <div class="flex justify-center gap-2 mb-8">
-                    <button data-slide-indicator="0" class="w-2 h-2 rounded-full bg-blue-600"></button>
-                    <button data-slide-indicator="1" class="w-2 h-2 rounded-full bg-gray-600"></button>
-                    <button data-slide-indicator="2" class="w-2 h-2 rounded-full bg-gray-600"></button>
-                    <button data-slide-indicator="3" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button data-slide-indicator="0" title="Go to onboarding slide one" class="w-2 h-2 rounded-full bg-blue-600"></button>
+                    <button data-slide-indicator="1" title="Go to onboarding slide two" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button data-slide-indicator="2" title="Go to onboarding slide three" class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button data-slide-indicator="3" title="Go to onboarding slide four" class="w-2 h-2 rounded-full bg-gray-600"></button>
                 </div>
                 
-                <button data-action="next-slide" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                <button data-action="next-slide" title="Continue to next onboarding step" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
                     Next Step
                 </button>
             </div>
@@ -167,19 +167,19 @@
                 <!-- D-Pad -->
                 <div class="flex justify-center mb-8">
                     <div class="relative w-32 h-32">
-                        <button data-dpad-button="up" class="absolute top-0 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="up" title="Navigate or scroll up" class="absolute top-0 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
                             <span class="material-symbols-outlined text-lg">arrow_upward</span>
                         </button>
-                        <button data-dpad-button="left" class="absolute top-12 left-0 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="left" title="Navigate or scroll left" class="absolute top-12 left-0 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
                             <span class="material-symbols-outlined text-lg">arrow_back</span>
                         </button>
-                        <button data-dpad-button="center" class="absolute top-12 left-12 w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full transition flex items-center justify-center">
+                        <button data-dpad-button="center" title="Confirm or select current option" class="absolute top-12 left-12 w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full transition flex items-center justify-center">
                             <span class="material-symbols-outlined text-lg">check</span>
                         </button>
-                        <button data-dpad-button="right" class="absolute top-12 left-24 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="right" title="Navigate or scroll right" class="absolute top-12 left-24 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </button>
-                        <button data-dpad-button="down" class="absolute top-24 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="down" title="Navigate or scroll down" class="absolute top-24 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
                             <span class="material-symbols-outlined text-lg">arrow_downward</span>
                         </button>
                     </div>
@@ -187,13 +187,13 @@
                 
                 <!-- Quick actions -->
                 <div class="grid grid-cols-3 gap-3 mb-8">
-                    <button data-quick-action="back" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    <button data-quick-action="back" title="Go back to previous screen" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
                         <span class="material-symbols-outlined text-lg">arrow_back</span>
                     </button>
-                    <button data-quick-action="home" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    <button data-quick-action="home" title="Return to home screen" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
                         <span class="material-symbols-outlined text-lg">home</span>
                     </button>
-                    <button data-quick-action="menu" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    <button data-quick-action="menu" title="Open main menu options" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
                         <span class="material-symbols-outlined text-lg">menu</span>
                     </button>
                 </div>
@@ -203,7 +203,7 @@
                     <label class="block text-sm font-semibold mb-2">Volume</label>
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-lg">volume_down</span>
-                        <input type="range" data-volume-slider class="flex-1" min="0" max="100" value="50">
+                        <input type="range" data-volume-slider aria-label="Volume level control" class="flex-1" min="0" max="100" value="50">
                         <span class="material-symbols-outlined text-lg">volume_up</span>
                     </div>
                     <p class="text-xs text-gray-400 text-center mt-2">50%</p>
@@ -212,17 +212,17 @@
                 <!-- Playback controls -->
                 <div class="mb-8">
                     <div class="grid grid-cols-5 gap-2">
-                        <button data-playback-control="replay-10s" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">-10s</button>
-                        <button data-playback-control="previous" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
+                        <button data-playback-control="replay-10s" title="Skip back ten seconds" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">-10s</button>
+                        <button data-playback-control="previous" title="Play previous track or item" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
                             <span class="material-symbols-outlined text-lg">skip_previous</span>
                         </button>
-                        <button data-playback-control="play-pause" class="bg-blue-600 hover:bg-blue-700 py-2 rounded transition">
+                        <button data-playback-control="play-pause" title="Play or resume content" class="bg-blue-600 hover:bg-blue-700 py-2 rounded transition">
                             <span class="material-symbols-outlined text-lg">play_arrow</span>
                         </button>
-                        <button data-playback-control="next" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
+                        <button data-playback-control="next" title="Play next track or item" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
                             <span class="material-symbols-outlined text-lg">skip_next</span>
                         </button>
-                        <button data-playback-control="forward-10s" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">+10s</button>
+                        <button data-playback-control="forward-10s" title="Skip forward ten seconds" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">+10s</button>
                     </div>
                 </div>
                 
@@ -234,7 +234,7 @@
                 </div>
                 
                 <!-- Power button -->
-                <button data-power-button class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition">
+                <button data-power-button title="Power off connected device" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition">
                     Power Off
                 </button>
             </div>
@@ -271,7 +271,7 @@
                             <p class="text-xs text-gray-400">Vibration on button press</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" data-setting="haptic-feedback" checked>
+                            <input type="checkbox" data-setting="haptic-feedback" aria-label="Enable haptic feedback vibration" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -279,7 +279,7 @@
                     <!-- Cursor Sensitivity -->
                     <div>
                         <h3 class="font-semibold mb-2">Cursor Sensitivity</h3>
-                        <input type="range" data-setting="cursor-sensitivity" class="w-full" min="0" max="100" value="75">
+                        <input type="range" data-setting="cursor-sensitivity" aria-label="Adjust cursor sensitivity level" class="w-full" min="0" max="100" value="75">
                         <p class="text-xs text-gray-400 mt-1">75%</p>
                     </div>
                     
@@ -290,14 +290,14 @@
                             <p class="text-xs text-gray-400">Flip up/down controls</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" data-setting="invert-y-axis">
+                            <input type="checkbox" data-setting="invert-y-axis" aria-label="Invert vertical axis controls">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                 </div>
                 
                 <!-- Reset Button -->
-                <button data-action="reset-defaults" class="w-full mt-12 bg-red-900 hover:bg-red-800 text-white font-semibold py-3 rounded-lg transition">
+                <button data-action="reset-defaults" title="Reset all settings to default values" class="w-full mt-12 bg-red-900 hover:bg-red-800 text-white font-semibold py-3 rounded-lg transition">
                     Reset to Defaults
                 </button>
             </div>

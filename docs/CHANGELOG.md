@@ -269,7 +269,7 @@ All commands are defined in `js/core/constants.js` in the `REMOTE_COMMANDS` obje
 ### Media Playback Commands
 
 | Command | Constant | Purpose |
-|---------|----------|---------|
+| --------- | ---------- | --------- |
 | play | PLAY | Start playback |
 | pause | PAUSE | Pause playback |
 | previous | PREVIOUS | Previous track/chapter |

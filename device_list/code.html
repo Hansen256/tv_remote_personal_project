@@ -40,7 +40,7 @@
 <header class="sticky top-0 z-20 flex items-center justify-between p-4 pb-2 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md transition-colors duration-300">
 <h2 class="text-[#111318] dark:text-white text-2xl font-bold leading-tight tracking-tight flex-1">My Remotes</h2>
 <div class="flex items-center justify-end">
-<button class="text-[#9da6b9] text-base font-bold leading-normal tracking-[0.015em] shrink-0 hover:text-primary transition-colors">Edit</button>
+<button class="text-[#9da6b9] text-base font-bold leading-normal tracking-[0.015em] shrink-0 hover:text-primary transition-colors" aria-label="Edit device list or settings">Edit</button>
 </div>
 </header>
 <main class="flex flex-col gap-6 p-4 pb-28">
@@ -65,10 +65,10 @@
 </div>
 </div>
 <div class="flex gap-2 flex-wrap">
-<button class="flex h-9 px-4 items-center justify-center rounded-lg bg-background-light dark:bg-[#282e39] text-[#111318] dark:text-white text-sm font-medium leading-normal hover:bg-gray-200 dark:hover:bg-[#343b48] transition-colors flex-1">
+<button class="flex h-9 px-4 items-center justify-center rounded-lg bg-background-light dark:bg-[#282e39] text-[#111318] dark:text-white text-sm font-medium leading-normal hover:bg-gray-200 dark:hover:bg-[#343b48] transition-colors flex-1" aria-label="Locate or ring connected device">
 <span class="truncate">Locate</span>
 </button>
-<button class="flex h-9 px-4 items-center justify-center rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-medium leading-normal hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors flex-1">
+<button class="flex h-9 px-4 items-center justify-center rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-medium leading-normal hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors flex-1" aria-label="Disconnect from active device">
 <span class="truncate">Disconnect</span>
 </button>
 </div>
@@ -84,7 +84,7 @@
 <h3 class="text-[#111318] dark:text-white text-lg font-bold leading-tight px-1">Saved Devices</h3>
 <div class="flex flex-col gap-3">
 <!-- List Item 1 -->
-<button class="group flex items-center gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-3 pr-4 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all active:scale-[0.99]">
+<button class="group flex items-center gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-3 pr-4 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all active:scale-[0.99]" aria-label="Switch to Bedroom TV device">
 <div class="flex items-center justify-center rounded-lg bg-background-light dark:bg-[#282e39] text-[#111318] dark:text-white shrink-0 size-14 group-hover:text-primary transition-colors">
 <span class="material-symbols-outlined text-[28px]">tv</span>
 </div>
@@ -97,7 +97,7 @@
 </div>
 </button>
 <!-- List Item 2 -->
-<button class="group flex items-center gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-3 pr-4 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all active:scale-[0.99]">
+<button class="group flex items-center gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-3 pr-4 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all active:scale-[0.99]" aria-label="Switch to Sound System device">
 <div class="flex items-center justify-center rounded-lg bg-background-light dark:bg-[#282e39] text-[#111318] dark:text-white shrink-0 size-14 group-hover:text-primary transition-colors">
 <span class="material-symbols-outlined text-[28px]">speaker</span>
 </div>
@@ -113,7 +113,7 @@
 </div>
 </button>
 <!-- List Item 3 -->
-<button class="group flex items-center gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-3 pr-4 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all active:scale-[0.99] opacity-80 hover:opacity-100">
+<button class="group flex items-center gap-4 rounded-xl bg-white dark:bg-[#1c1f27] p-3 pr-4 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:ring-primary/50 dark:hover:ring-primary/50 transition-all active:scale-[0.99] opacity-80 hover:opacity-100" aria-label="Switch to Game Console device">
 <div class="flex items-center justify-center rounded-lg bg-background-light dark:bg-[#282e39] text-[#111318] dark:text-white shrink-0 size-14 group-hover:text-primary transition-colors">
 <span class="material-symbols-outlined text-[28px]">videogame_asset</span>
 </div>
@@ -130,7 +130,7 @@
 </main>
 <!-- Sticky Bottom Action -->
 <div class="fixed bottom-0 left-0 right-0 z-30 p-4 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent pt-8">
-<button class="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-blue-600 text-white font-bold h-14 shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all">
+<button class="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-blue-600 text-white font-bold h-14 shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all" aria-label="Add and pair a new device">
 <span class="material-symbols-outlined">add_circle</span>
 <span>Pair New Device</span>
 </button>

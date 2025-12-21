@@ -44,11 +44,11 @@
 <!-- Header -->
 <div class="sticky top-0 z-20 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-black/5 dark:border-white/5">
 <div class="flex items-center px-4 py-3 justify-between">
-<div class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer">
+<div class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer" aria-label="Navigate back to main menu">
 <span class="material-symbols-outlined text-black dark:text-white icon-24">arrow_back</span>
 </div>
 <h2 class="text-[#111318] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">Add Device</h2>
-<div class="flex w-10 items-center justify-center">
+<div class="flex w-10 items-center justify-center" aria-label="Help and troubleshooting guide">
 <span class="material-symbols-outlined text-[#9da6b9] icon-24">help</span>
 </div>
 </div>
@@ -77,7 +77,7 @@
 <div class="w-full max-w-md flex flex-col gap-4">
 <h3 class="text-[#111318] dark:text-white text-sm uppercase tracking-wider font-bold opacity-60 px-1">Available Devices</h3>
 <!-- Device Card 1 (Selected) -->
-<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border-2 border-primary shadow-lg shadow-primary/10 transition-all duration-200">
+<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border-2 border-primary shadow-lg shadow-primary/10 transition-all duration-200" aria-label="Pro Remote X1 device option">
 <div class="flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-12">
 <span class="material-symbols-outlined text-primary">gamepad</span>
 </div>
@@ -96,7 +96,7 @@
 </div>
 </label>
 <!-- Device Card 2 (Unselected) -->
-<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border border-transparent hover:border-white/10 transition-all duration-200">
+<label class=\"group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border border-transparent hover:border-white/10 transition-all duration-200\" aria-label=\"Unknown Device option\">
 <div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#282e39] shrink-0 size-12">
 <span class="material-symbols-outlined text-gray-500 dark:text-white">bluetooth</span>
 </div>
@@ -113,7 +113,7 @@
 </div>
 </label>
 <!-- Device Card 3 (Unselected) -->
-<label class="group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border border-transparent hover:border-white/10 transition-all duration-200">
+<label class=\"group relative flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl cursor-pointer border border-transparent hover:border-white/10 transition-all duration-200\" aria-label=\"Media Controller device option\">
 <div class="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-[#282e39] shrink-0 size-12">
 <span class="material-symbols-outlined text-gray-500 dark:text-white">tv_remote</span>
 </div>
@@ -134,13 +134,13 @@
 <!-- Sticky Footer Action -->
 <div class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-xl border-t border-black/5 dark:border-white/5 z-30">
 <div class="max-w-md mx-auto w-full flex flex-col gap-4">
-<button class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-white shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-primary/40 active:scale-[0.98] transition-all duration-200">
+<button class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-white shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-primary/40 active:scale-[0.98] transition-all duration-200" aria-label="Connect selected device to app">
 <span class="text-base font-bold tracking-wide">Connect Device</span>
 <span class="material-symbols-outlined text-xl">arrow_forward</span>
 </button>
 <div class="flex items-center justify-center gap-1">
 <p class="text-[#9da6b9] text-sm">Can't find it?</p>
-<button class="text-primary text-sm font-bold hover:underline">Enter code manually</button>
+<button class="text-primary text-sm font-bold hover:underline" aria-label="Pair device using manual code">Enter code manually</button>
 </div>
 </div>
 </div>

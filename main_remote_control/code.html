@@ -48,7 +48,7 @@
                 </span>
 </div>
 <div class="flex w-12 items-center justify-end">
-<button class="flex items-center justify-center bg-transparent text-gray-400 dark:text-gray-400 gap-2">
+<button class="flex items-center justify-center bg-transparent text-gray-400 dark:text-gray-400 gap-2" aria-label="Battery level and charge status">
 <span class="material-symbols-outlined">battery_5_bar</span>
 </button>
 </div>
@@ -62,30 +62,30 @@
 <div class="grid grid-cols-3 grid-rows-3 w-full h-full p-2 gap-1">
 <!-- Top Row -->
 <div class="col-start-2 row-start-1 flex justify-center items-end pb-2">
-<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm">
+<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm" aria-label="Navigate or scroll up">
 <span class="material-symbols-outlined text-3xl">keyboard_arrow_up</span>
 </button>
 </div>
 <!-- Middle Row -->
 <div class="col-start-1 row-start-2 flex justify-end items-center pr-2">
-<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm">
+<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm" aria-label="Navigate or scroll left">
 <span class="material-symbols-outlined text-3xl">keyboard_arrow_left</span>
 </button>
 </div>
 <!-- Center OK Button -->
 <div class="col-start-2 row-start-2 flex justify-center items-center z-10">
-<button class="w-20 h-20 rounded-full bg-primary text-white shadow-lg shadow-primary/30 active:shadow-inner active:scale-95 transition-all flex flex-col items-center justify-center">
+<button class="w-20 h-20 rounded-full bg-primary text-white shadow-lg shadow-primary/30 active:shadow-inner active:scale-95 transition-all flex flex-col items-center justify-center" aria-label="Confirm or select current option">
 <span class="text-sm font-bold tracking-wider">OK</span>
 </button>
 </div>
 <div class="col-start-3 row-start-2 flex justify-start items-center pl-2">
-<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm">
+<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm" aria-label="Navigate or scroll right">
 <span class="material-symbols-outlined text-3xl">keyboard_arrow_right</span>
 </button>
 </div>
 <!-- Bottom Row -->
 <div class="col-start-2 row-start-3 flex justify-center items-start pt-2">
-<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm">
+<button class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-[#151b26] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1f2937] active:scale-95 transition-all flex items-center justify-center shadow-sm" aria-label="Navigate or scroll down">
 <span class="material-symbols-outlined text-3xl">keyboard_arrow_down</span>
 </button>
 </div>
@@ -94,19 +94,19 @@
 </div>
 <!-- Core Actions Row -->
 <div class="flex justify-center gap-8 px-6 pb-6 pt-2">
-<button class="flex flex-col items-center gap-2 group">
+<button class=\"flex flex-col items-center gap-2 group\" aria-label=\"Go back to previous screen\">
 <div class="w-12 h-12 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 group-hover:text-primary group-hover:border-primary/50 transition-all">
 <span class="material-symbols-outlined">arrow_back</span>
 </div>
 <span class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Back</span>
 </button>
-<button class="flex flex-col items-center gap-2 group">
+<button class="flex flex-col items-center gap-2 group" aria-label="Return to home screen">
 <div class="w-12 h-12 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 group-hover:text-primary group-hover:border-primary/50 transition-all">
 <span class="material-symbols-outlined">home</span>
 </div>
 <span class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Home</span>
 </button>
-<button class="flex flex-col items-center gap-2 group">
+<button class="flex flex-col items-center gap-2 group" aria-label="Open main menu options">
 <div class="w-12 h-12 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 group-hover:text-primary group-hover:border-primary/50 transition-all">
 <span class="material-symbols-outlined">menu</span>
 </div>
@@ -121,7 +121,7 @@
                 </span>
 <span class="text-xs font-bold text-white">65%</span>
 </div>
-<div class="relative h-12 w-full bg-surface-light dark:bg-surface-dark rounded-xl p-1 shadow-inner border border-gray-200 dark:border-gray-800 flex items-center cursor-pointer">
+<div class="relative h-12 w-full bg-surface-light dark:bg-surface-dark rounded-xl p-1 shadow-inner border border-gray-200 dark:border-gray-800 flex items-center cursor-pointer" aria-label="Volume level slider control">
 <!-- Track Background -->
 <div class="absolute inset-x-2 h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
 <div class="h-full bg-primary w-[65%] rounded-full"></div>
@@ -135,19 +135,19 @@
 <!-- Playback Controls -->
 <div class="px-6 pb-8">
 <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 border border-gray-200 dark:border-gray-800 flex justify-between items-center shadow-lg">
-<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform">
+<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform" aria-label="Skip back ten seconds">
 <span class="material-symbols-outlined text-2xl">replay_10</span>
 </button>
-<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform">
+<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform" aria-label="Play previous track or item">
 <span class="material-symbols-outlined text-3xl">skip_previous</span>
 </button>
-<button class="w-14 h-14 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 active:scale-95 transition-all">
+<button class="w-14 h-14 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 active:scale-95 transition-all" aria-label="Play or resume content">
 <span class="material-symbols-outlined text-3xl fill-current">play_arrow</span>
 </button>
-<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform">
+<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform" aria-label="Play next track or item">
 <span class="material-symbols-outlined text-3xl">skip_next</span>
 </button>
-<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform">
+<button class="p-3 text-gray-500 dark:text-gray-400 hover:text-primary active:scale-95 transition-transform" aria-label="Skip forward ten seconds">
 <span class="material-symbols-outlined text-2xl">forward_10</span>
 </button>
 </div>
@@ -171,7 +171,7 @@
 <div class="w-full h-full bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity bg-image-play" data-alt="Red background with Play button"></div>
 </div>
 </button>
-<button class="flex flex-col items-center gap-2 group">
+<button class="flex flex-col items-center gap-2 group" aria-label="Add or configure new shortcut">
 <div class="w-full aspect-square rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800 flex items-center justify-center overflow-hidden hover:border-primary transition-colors">
 <div class="w-full h-full bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-gray-800" data-alt="Dark gray square with plus icon">
 <span class="material-symbols-outlined text-gray-500">add</span>
@@ -182,7 +182,7 @@
 </div>
 <!-- Bottom Power Button -->
 <div class="mt-auto px-6 pb-8 pt-2 flex justify-center">
-<button class="flex items-center justify-center gap-3 px-8 py-3 rounded-full bg-red-500/10 text-red-500 font-bold border border-red-500/20 hover:bg-red-500 hover:text-white transition-all w-full max-w-[200px]">
+<button class="flex items-center justify-center gap-3 px-8 py-3 rounded-full bg-red-500/10 text-red-500 font-bold border border-red-500/20 hover:bg-red-500 hover:text-white transition-all w-full max-w-[200px]" aria-label="Power off connected device">
 <span class="material-symbols-outlined">power_settings_new</span>
 <span>Power Off</span>
 </button>

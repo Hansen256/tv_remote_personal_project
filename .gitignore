@@ -8,4 +8,8 @@ npm-debug.log
 dist/
 build/
 .cache/
-plan-bluetoothTvRemote.prompt.md
+*.github/
+.github/copilot-instructions.md
+.github/prompts/plan-standardizeProjectStructure.prompt.md
+.gitignore
+REORGANIZATION_COMPLETE.md
