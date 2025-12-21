@@ -311,6 +311,17 @@
                     </div>
                 </div>
                 
+                <!-- Command History -->
+                <div class="mt-8">
+                    <h3 class="font-semibold mb-4">Recent Commands</h3>
+                    <div data-command-history class="bg-gray-800 rounded-lg p-4 max-h-48 overflow-y-auto">
+                        <p class="text-gray-400 text-sm text-center">No commands yet</p>
+                    </div>
+                    <button data-action="clear-history" class="w-full mt-2 bg-gray-700 hover:bg-gray-600 text-white text-sm py-2 rounded-lg transition-all duration-150 active:scale-95">
+                        Clear History
+                    </button>
+                </div>
+                
                 <!-- Reset Button -->
                 <button data-action="reset-defaults" title="Reset all settings to default values" class="w-full mt-12 bg-red-900 hover:bg-red-800 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                     Reset to Defaults

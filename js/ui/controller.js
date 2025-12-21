@@ -69,9 +69,9 @@ class UIController {
       case VIEWS.DEVICE_LIST:
         return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState };
       case VIEWS.MAIN_REMOTE:
-        return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState };
+        return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState, deviceStatus: state.deviceStatus };
       case VIEWS.SETTINGS:
-        return { settings: state.settings };
+        return { settings: state.settings, commandQueue: state.commandQueue };
       default:
         return {};
     }
@@ -626,6 +626,15 @@ class UIController {
       });
     }
     
+    // Setup clear history button
+    const clearHistoryBtn = container.querySelector('[data-action="clear-history"]');
+    if (clearHistoryBtn) {
+      clearHistoryBtn.addEventListener('click', () => {
+        stateManager.clearCommandQueue();
+        this.showNotification('Command history cleared', 'info');
+      });
+    }
+    
     // Mark as initialized
     this._settingsInitialized = true;
   }
@@ -648,6 +657,24 @@ class UIController {
     const invertToggle = container.querySelector('[data-setting="invert-y-axis"]');
     if (invertToggle) {
       invertToggle.checked = state.settings.invertYAxis;
+    }
+    
+    // Update command history
+    const historyContainer = container.querySelector('[data-command-history]');
+    if (historyContainer && state.commandQueue) {
+      if (state.commandQueue.length === 0) {
+        historyContainer.innerHTML = '<p class="text-gray-400 text-sm text-center">No commands yet</p>';
+      } else {
+        // Show last 10 commands
+        const recentCommands = state.commandQueue.slice(-10).reverse();
+        historyContainer.innerHTML = recentCommands.map((cmd, idx) => {
+          const timestamp = new Date().toLocaleTimeString();
+          return `<div class="text-xs py-1 border-b border-gray-700 last:border-0">
+            <span class="text-gray-400">${timestamp}</span>
+            <span class="text-white ml-2">${cmd}</span>
+          </div>`;
+        }).join('');
+      }
     }
   }
   
