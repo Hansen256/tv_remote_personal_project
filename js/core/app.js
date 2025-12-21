@@ -9,6 +9,9 @@ class App {
   constructor() {
     this.initialized = false;
     this.keyboardListener = null;
+    this.volumeRampingInterval = null;
+    this.volumeRampingDirection = null;
+    this.batteryCheckInterval = null;
   }
   
   /**
@@ -77,6 +80,18 @@ class App {
       this.handleVolumeChange(detail.volume);
     });
     
+    uiController.addEventListener('volume-button-pressed', (detail) => {
+      this.handleVolumeButton(detail.direction, detail.isLongPress);
+    });
+    
+    uiController.addEventListener('volume-long-press-start', (detail) => {
+      this.startVolumeRamping(detail.direction);
+    });
+    
+    uiController.addEventListener('volume-long-press-end', () => {
+      this.stopVolumeRamping();
+    });
+    
     uiController.addEventListener('power-pressed', () => {
       this.handlePowerButton();
     });
@@ -101,6 +116,13 @@ class App {
       // Handle Bluetooth status updates
       if (state.connectionState) {
         console.log('Connection state:', state.connectionState);
+        
+        // Start/stop battery monitoring based on connection state
+        if (state.connectionState === 'connected' && state.activeDeviceId) {
+          this.startBatteryMonitoring();
+        } else {
+          this.stopBatteryMonitoring();
+        }
       }
       
       // Manage keyboard listener based on current view
@@ -116,6 +138,56 @@ class App {
         }
       }
     });
+  }
+  
+  /**
+   * Start battery level monitoring
+   */
+  startBatteryMonitoring() {
+    // Stop any existing monitoring
+    this.stopBatteryMonitoring();
+    
+    // Check battery immediately
+    this.checkBatteryLevel();
+    
+    // Check battery every 5 minutes
+    this.batteryCheckInterval = setInterval(() => {
+      this.checkBatteryLevel();
+    }, 5 * 60 * 1000);
+  }
+  
+  /**
+   * Stop battery level monitoring
+   */
+  stopBatteryMonitoring() {
+    if (this.batteryCheckInterval) {
+      clearInterval(this.batteryCheckInterval);
+      this.batteryCheckInterval = null;
+    }
+  }
+  
+  /**
+   * Check battery level
+   */
+  async checkBatteryLevel() {
+    try {
+      const battery = await bluetoothManager.getBatteryLevel();
+      if (battery !== null) {
+        const activeDeviceId = stateManager.getState().activeDeviceId;
+        if (activeDeviceId) {
+          stateManager.updateDeviceStatus(activeDeviceId, { battery });
+          
+          // Show warning if battery is low
+          if (battery <= 10) {
+            uiController.showNotification(`Battery low: ${battery}%`, 'error');
+          } else if (battery <= 20) {
+            uiController.showNotification(`Battery: ${battery}%`, 'warning');
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to check battery level:', error);
+    }
   }
   
   /**
@@ -238,6 +310,61 @@ class App {
         console.error('Failed to send command:', error);
         uiController.showNotification('Device disconnected. Reconnecting...', 'error');
       }
+    }
+  }
+  
+  /**
+   * Handle volume button press
+   */
+  async handleVolumeButton(direction, isLongPress) {
+    if (isLongPress) return; // Long press handled separately
+    
+    const command = direction === 'up' ? REMOTE_COMMANDS.VOLUME_UP : REMOTE_COMMANDS.VOLUME_DOWN;
+    try {
+      await bluetoothManager.sendCommand(command);
+      this.sendHapticPattern(HAPTIC_PATTERNS.VOLUME_CHANGE);
+    } catch (error) {
+      console.error('Failed to send command:', error);
+      uiController.showNotification('Device disconnected. Reconnecting...', 'error');
+    }
+  }
+  
+  /**
+   * Start volume ramping on long press
+   */
+  async startVolumeRamping(direction) {
+    // Stop any existing ramping
+    this.stopVolumeRamping();
+    
+    this.volumeRampingDirection = direction;
+    const command = direction === 'up' ? REMOTE_COMMANDS.VOLUME_UP : REMOTE_COMMANDS.VOLUME_DOWN;
+    
+    // Send initial haptic feedback
+    this.sendHapticPattern(HAPTIC_PATTERNS.LONG_PRESS);
+    
+    // Send commands repeatedly at 200ms intervals for smooth ramping
+    this.volumeRampingInterval = setInterval(async () => {
+      try {
+        await bluetoothManager.sendCommand(command);
+      } catch (error) {
+        console.error('Failed to send volume command:', error);
+        this.stopVolumeRamping();
+        uiController.showNotification('Device disconnected. Reconnecting...', 'error');
+      }
+    }, 200);
+  }
+  
+  /**
+   * Stop volume ramping
+   */
+  stopVolumeRamping() {
+    if (this.volumeRampingInterval) {
+      clearInterval(this.volumeRampingInterval);
+      this.volumeRampingInterval = null;
+      this.volumeRampingDirection = null;
+      
+      // Send haptic feedback on release
+      this.sendHapticPattern(HAPTIC_PATTERNS.BUTTON_PRESS);
     }
   }
   

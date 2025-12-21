@@ -116,6 +116,14 @@ class StateManager {
     }
   }
   
+  updateDeviceName(deviceId, customName) {
+    const updated = this.state.pairedDevices.map(d => 
+      d.id === deviceId ? { ...d, customName } : d
+    );
+    this.updateState({ pairedDevices: updated });
+    this.saveToStorage(STORAGE_KEYS.PAIRED_DEVICES, updated);
+  }
+  
   removePairedDevice(deviceId) {
     const updated = this.state.pairedDevices.filter(d => d.id !== deviceId);
     this.updateState({ pairedDevices: updated });
