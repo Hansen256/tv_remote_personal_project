@@ -55,12 +55,13 @@ stitch_bluetooth_remote/
 
 ### Phase 2 - Enhanced Experience
 
-- [ ] Haptic feedback on button press
-- [ ] Battery level display and monitoring
-- [ ] Connection status indicators with animations
-- [ ] Advanced Bluetooth commands (volume ramp, playback)
-- [ ] Device custom naming
-- [ ] Command history
+- [x] Haptic feedback on button press
+- [x] Battery level display and monitoring
+- [x] Connection status indicators with animations
+- [x] Advanced Bluetooth commands (volume ramp with long-press, playback)
+- [x] Device custom naming
+- [x] Command history
+- [x] PWA support (Add to Home Screen)
 
 ### Phase 3 - Polish & Optimization
 
@@ -68,7 +69,7 @@ stitch_bluetooth_remote/
 - [ ] Offline mode with command queueing
 - [ ] Performance optimization
 - [ ] Cross-browser testing
-- [ ] PWA packaging
+- [ ] HID protocol support for desktop
 
 ## Technology Stack
 
@@ -468,8 +469,9 @@ For issues or questions, refer to:
 - [Web Bluetooth API Docs](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [Material Symbols Guide](https://fonts.google.com/icons)
+- [Phase 2 Implementation Guide](docs/PHASE2.md) - Detailed documentation for Phase 2 features
 
 ---
 
-**Last Updated:** December 17, 2025  
-**Status:** Phase 1 (MVP) - Core Implementation Complete
+**Last Updated:** December 21, 2025  
+**Status:** Phase 2 - Enhanced Experience Complete

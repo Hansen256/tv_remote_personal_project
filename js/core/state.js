@@ -116,6 +116,14 @@ class StateManager {
     }
   }
   
+  updateDeviceName(deviceId, customName) {
+    const updated = this.state.pairedDevices.map(d => 
+      d.id === deviceId ? { ...d, customName } : d
+    );
+    this.updateState({ pairedDevices: updated });
+    this.saveToStorage(STORAGE_KEYS.PAIRED_DEVICES, updated);
+  }
+  
   removePairedDevice(deviceId) {
     const updated = this.state.pairedDevices.filter(d => d.id !== deviceId);
     this.updateState({ pairedDevices: updated });
@@ -155,15 +163,19 @@ class StateManager {
   }
   
   recordCommand(command) {
-    // Add new command and cap queue to MAX_COMMAND_QUEUE_SIZE
+    // Add new command with timestamp and cap queue to MAX_COMMAND_QUEUE_SIZE
     // Drops oldest entries (FIFO) when queue exceeds max
-    const updatedQueue = [...this.state.commandQueue, command];
+    const commandEntry = {
+      command,
+      timestamp: Date.now()
+    };
+    const updatedQueue = [...this.state.commandQueue, commandEntry];
     const trimmedQueue = updatedQueue.length > StateManager.MAX_COMMAND_QUEUE_SIZE
       ? updatedQueue.slice(-StateManager.MAX_COMMAND_QUEUE_SIZE)
       : updatedQueue;
     
     this.updateState({
-      lastCommand: command,
+      lastCommand: commandEntry,
       commandQueue: trimmedQueue
     });
   }

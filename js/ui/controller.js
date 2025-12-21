@@ -16,6 +16,10 @@ class UIController {
     this.modalMessage = document.getElementById('modal-message');
     this.modalCancel = document.getElementById('modal-cancel');
     this.modalConfirm = document.getElementById('modal-confirm');
+    this.renameModal = document.getElementById('rename-modal');
+    this.renameInput = document.getElementById('rename-input');
+    this.renameCancel = document.getElementById('rename-cancel');
+    this.renameConfirm = document.getElementById('rename-confirm');
   }
   
   /**
@@ -65,9 +69,9 @@ class UIController {
       case VIEWS.DEVICE_LIST:
         return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState };
       case VIEWS.MAIN_REMOTE:
-        return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState };
+        return { pairedDevices: state.pairedDevices, activeDeviceId: state.activeDeviceId, connectionState: state.connectionState, deviceStatus: state.deviceStatus };
       case VIEWS.SETTINGS:
-        return { settings: state.settings };
+        return { settings: state.settings, commandQueue: state.commandQueue };
       default:
         return {};
     }
@@ -307,15 +311,29 @@ class UIController {
       });
     }
     
-    // Setup device selection with event delegation
+    // Setup device selection and rename with event delegation
     const deviceList = container.querySelector('[data-saved-devices]');
     if (deviceList) {
-      deviceList.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-action="select-device"]');
-        if (btn) {
-          const deviceId = btn.dataset.deviceId;
+      deviceList.addEventListener('click', async (e) => {
+        const selectBtn = e.target.closest('[data-action="select-device"]');
+        if (selectBtn) {
+          const deviceId = selectBtn.dataset.deviceId;
           stateManager.setActiveDevice(deviceId);
           stateManager.setCurrentView(VIEWS.MAIN_REMOTE);
+          return;
+        }
+        
+        const renameBtn = e.target.closest('[data-action="rename-device"]');
+        if (renameBtn) {
+          const deviceId = renameBtn.dataset.deviceId;
+          const device = state.pairedDevices.find(d => d.id === deviceId);
+          if (device) {
+            const newName = await this.showRenameModal(device.customName || device.name);
+            if (newName && newName !== (device.customName || device.name)) {
+              stateManager.updateDeviceName(deviceId, newName);
+              this.showNotification('Device renamed successfully', 'success');
+            }
+          }
         }
       });
     }
@@ -396,7 +414,7 @@ class UIController {
       deviceInfo.className = 'device-info';
       
       const deviceName = document.createElement('h4');
-      deviceName.textContent = device.name;
+      deviceName.textContent = device.customName || device.name;
       deviceInfo.appendChild(deviceName);
       
       const status = document.createElement('p');
@@ -405,17 +423,32 @@ class UIController {
       
       deviceEl.appendChild(deviceInfo);
       
-      // Create button
+      // Create actions container
+      const actions = document.createElement('div');
+      actions.className = 'flex items-center gap-2';
+      
+      // Add rename button
+      const renameBtn = document.createElement('button');
+      renameBtn.setAttribute('data-action', 'rename-device');
+      renameBtn.setAttribute('data-device-id', String(device.id));
+      renameBtn.className = 'text-gray-400 hover:text-blue-400 transition';
+      const renameIcon = document.createElement('span');
+      renameIcon.className = 'material-symbols-outlined text-sm';
+      renameIcon.textContent = 'edit';
+      renameBtn.appendChild(renameIcon);
+      actions.appendChild(renameBtn);
+      
+      // Add select button
       const button = document.createElement('button');
       button.setAttribute('data-action', 'select-device');
       button.setAttribute('data-device-id', String(device.id));
-      
       const icon = document.createElement('span');
       icon.className = 'material-symbols-outlined';
       icon.textContent = 'chevron_right';
       button.appendChild(icon);
+      actions.appendChild(button);
       
-      deviceEl.appendChild(button);
+      deviceEl.appendChild(actions);
       
       fragment.appendChild(deviceEl);
     });
@@ -451,12 +484,55 @@ class UIController {
     
     // Setup volume slider
     const volumeSlider = container.querySelector('[data-volume-slider]');
+    const volumeDisplay = container.querySelector('[data-volume-display]');
     if (volumeSlider) {
       volumeSlider.addEventListener('input', (e) => {
         const volume = e.target.value;
+        if (volumeDisplay) {
+          volumeDisplay.textContent = `${volume}%`;
+        }
         this.dispatchEvent('volume-changed', { volume });
       });
     }
+    
+    // Setup volume buttons with long-press detection
+    const volumeButtons = container.querySelectorAll('[data-volume-button]');
+    volumeButtons.forEach(btn => {
+      let pressTimer = null;
+      let isLongPress = false;
+      
+      const startPress = () => {
+        isLongPress = false;
+        const direction = btn.dataset.volumeButton;
+        
+        // Immediate single command
+        this.dispatchEvent('volume-button-pressed', { direction, isLongPress: false });
+        
+        // Start long press detection
+        pressTimer = setTimeout(() => {
+          isLongPress = true;
+          this.dispatchEvent('volume-long-press-start', { direction });
+        }, 500); // 500ms threshold for long press
+      };
+      
+      const endPress = () => {
+        if (pressTimer) {
+          clearTimeout(pressTimer);
+          pressTimer = null;
+        }
+        
+        if (isLongPress) {
+          this.dispatchEvent('volume-long-press-end', {});
+        }
+      };
+      
+      btn.addEventListener('mousedown', startPress);
+      btn.addEventListener('touchstart', startPress);
+      btn.addEventListener('mouseup', endPress);
+      btn.addEventListener('mouseleave', endPress);
+      btn.addEventListener('touchend', endPress);
+      btn.addEventListener('touchcancel', endPress);
+    });
     
     // Setup playback controls
     const playbackBtns = container.querySelectorAll('[data-playback-control]');
@@ -494,7 +570,18 @@ class UIController {
     if (deviceName && state.activeDeviceId) {
       const device = state.pairedDevices.find(d => d.id === state.activeDeviceId);
       if (device) {
-        deviceName.textContent = device.name;
+        deviceName.textContent = device.customName || device.name || 'Remote';
+      }
+    }
+    
+    // Update battery level
+    const batteryLevel = container.querySelector('[data-battery-level]');
+    if (batteryLevel && state.activeDeviceId) {
+      const deviceStatus = state.deviceStatus[state.activeDeviceId];
+      if (deviceStatus && deviceStatus.battery !== undefined) {
+        batteryLevel.textContent = `${deviceStatus.battery}%`;
+      } else {
+        batteryLevel.textContent = '--';
       }
     }
   }
@@ -539,6 +626,15 @@ class UIController {
       });
     }
     
+    // Setup clear history button
+    const clearHistoryBtn = container.querySelector('[data-action="clear-history"]');
+    if (clearHistoryBtn) {
+      clearHistoryBtn.addEventListener('click', () => {
+        stateManager.clearCommandQueue();
+        this.showNotification('Command history cleared', 'info');
+      });
+    }
+    
     // Mark as initialized
     this._settingsInitialized = true;
   }
@@ -561,6 +657,25 @@ class UIController {
     const invertToggle = container.querySelector('[data-setting="invert-y-axis"]');
     if (invertToggle) {
       invertToggle.checked = state.settings.invertYAxis;
+    }
+    
+    // Update command history
+    const historyContainer = container.querySelector('[data-command-history]');
+    if (historyContainer && state.commandQueue) {
+      if (state.commandQueue.length === 0) {
+        historyContainer.innerHTML = '<p class="text-gray-400 text-sm text-center">No commands yet</p>';
+      } else {
+        // Show last 10 commands
+        const recentCommands = state.commandQueue.slice(-10).reverse();
+        historyContainer.innerHTML = recentCommands.map((entry) => {
+          const timestamp = new Date(entry.timestamp).toLocaleTimeString();
+          const command = entry.command || entry; // Fallback for old format
+          return `<div class="text-xs py-1 border-b border-gray-700 last:border-0">
+            <span class="text-gray-400">${timestamp}</span>
+            <span class="text-white ml-2">${command}</span>
+          </div>`;
+        }).join('');
+      }
     }
   }
   
@@ -658,6 +773,47 @@ class UIController {
       
       // Focus the cancel button by default
       this.modalCancel.focus();
+    });
+  }
+  
+  showRenameModal(currentName) {
+    return new Promise((resolve) => {
+      this.renameInput.value = currentName;
+      this.renameModal.classList.remove('hidden');
+      
+      const handleConfirm = () => {
+        const newName = this.renameInput.value.trim();
+        cleanup();
+        resolve(newName || null);
+      };
+      
+      const handleCancel = () => {
+        cleanup();
+        resolve(null);
+      };
+      
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          handleCancel();
+        } else if (e.key === 'Enter') {
+          handleConfirm();
+        }
+      };
+      
+      const cleanup = () => {
+        this.renameModal.classList.add('hidden');
+        this.renameCancel.removeEventListener('click', handleCancel);
+        this.renameConfirm.removeEventListener('click', handleConfirm);
+        this.renameInput.removeEventListener('keydown', handleKeyDown);
+      };
+      
+      this.renameCancel.addEventListener('click', handleCancel);
+      this.renameConfirm.addEventListener('click', handleConfirm);
+      this.renameInput.addEventListener('keydown', handleKeyDown);
+      
+      // Focus the input
+      this.renameInput.focus();
+      this.renameInput.select();
     });
   }
 }
