@@ -3,7 +3,7 @@
 import { stateManager } from './state.js';
 import { bluetoothManager } from '../services/bluetooth.js';
 import { uiController } from '../ui/controller.js';
-import { VIEWS, REMOTE_COMMANDS, DEFAULT_SETTINGS } from './constants.js';
+import { VIEWS, REMOTE_COMMANDS, DEFAULT_SETTINGS, HAPTIC_PATTERNS, HAPTIC_SETTINGS } from './constants.js';
 
 class App {
   constructor() {
@@ -86,6 +86,11 @@ class App {
     document.addEventListener('keydown', (e) => {
       this.handleKeyboardInput(e);
     });
+    
+    // Storage error notifications
+    window.addEventListener('state:storage-error', (e) => {
+      uiController.showNotification(e.detail.message, 'error');
+    });
   }
   
   /**
@@ -107,7 +112,7 @@ class App {
   async handleDeviceConnection() {
     try {
       if (!bluetoothManager.isSupported) {
-        uiController.showNotification('Bluetooth not supported on this device', 'error');
+        uiController.showNotification('Bluetooth not supported on this device. Try using Chrome or Edge.', 'error');
         return;
       }
       
@@ -118,11 +123,13 @@ class App {
       // Connect to device
       await bluetoothManager.connect();
       
+      this.sendHapticPattern(HAPTIC_PATTERNS.SUCCESS);
       uiController.showNotification(`Connected to ${device.name}`, 'success');
       stateManager.setCurrentView(VIEWS.DEVICE_LIST);
     } catch (error) {
       console.error('Connection error:', error);
-      uiController.showNotification('Failed to connect device', 'error');
+      this.sendHapticPattern(HAPTIC_PATTERNS.ERROR);
+      uiController.showNotification(error.message || 'Failed to connect. Make sure device is powered on and in range.', 'error');
     }
   }
   
@@ -140,8 +147,13 @@ class App {
     
     const command = commands[direction];
     if (command) {
-      await bluetoothManager.sendCommand(command);
-      this.applyButtonFeedback();
+      try {
+        await bluetoothManager.sendCommand(command);
+        this.applyButtonFeedback();
+      } catch (error) {
+        console.error('Failed to send command:', error);
+        uiController.showNotification('Device disconnected. Reconnecting...', 'error');
+      }
     }
   }
   
@@ -157,8 +169,13 @@ class App {
     
     const command = commands[action];
     if (command) {
-      await bluetoothManager.sendCommand(command);
-      this.applyButtonFeedback();
+      try {
+        await bluetoothManager.sendCommand(command);
+        this.applyButtonFeedback();
+      } catch (error) {
+        console.error('Failed to send command:', error);
+        uiController.showNotification('Device disconnected. Reconnecting...', 'error');
+      }
     }
   }
   
@@ -176,8 +193,13 @@ class App {
     
     const command = commands[control];
     if (command) {
-      await bluetoothManager.sendCommand(command);
-      this.applyButtonFeedback();
+      try {
+        await bluetoothManager.sendCommand(command);
+        this.applyButtonFeedback();
+      } catch (error) {
+        console.error('Failed to send command:', error);
+        uiController.showNotification('Device disconnected. Reconnecting...', 'error');
+      }
     }
   }
   
@@ -198,7 +220,13 @@ class App {
     }
     
     if (commands.length > 0) {
-      await bluetoothManager.sendCommandSequence(commands);
+      try {
+        await bluetoothManager.sendCommandSequence(commands);
+        this.sendHapticPattern(HAPTIC_PATTERNS.VOLUME_CHANGE);
+      } catch (error) {
+        console.error('Failed to send command:', error);
+        uiController.showNotification('Device disconnected. Reconnecting...', 'error');
+      }
     }
   }
   
@@ -209,7 +237,7 @@ class App {
     // Confirm before powering off
     if (confirm('Turn off the remote?')) {
       await bluetoothManager.sendCommand(REMOTE_COMMANDS.POWER_OFF);
-      this.applyButtonFeedback();
+      this.applyButtonFeedback(HAPTIC_PATTERNS.LONG_PRESS);
     }
   }
   
@@ -272,22 +300,42 @@ class App {
   }
   
   /**
-   * Apply visual/haptic feedback for button press
+   * Send haptic feedback with pattern
    */
-  applyButtonFeedback() {
+  sendHapticPattern(pattern = HAPTIC_PATTERNS.BUTTON_PRESS) {
     const settings = stateManager.getUserSettings();
     
+    // Check if haptic feedback is enabled
+    if (!settings.hapticFeedback || !navigator.vibrate) {
+      return;
+    }
+    
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      // Use reduced intensity for accessibility
+      const reducedPattern = pattern.map(duration => 
+        Math.floor(duration * HAPTIC_SETTINGS.REDUCED_INTENSITY)
+      );
+      navigator.vibrate(reducedPattern);
+    } else {
+      navigator.vibrate(pattern);
+    }
+  }
+  
+  /**
+   * Apply visual/haptic feedback for button press
+   */
+  applyButtonFeedback(hapticPattern = HAPTIC_PATTERNS.BUTTON_PRESS) {
     // Visual feedback
     const activeElement = document.activeElement;
     if (activeElement) {
       activeElement.classList.add('pressed');
-      setTimeout(() => activeElement.classList.remove('pressed'), 100);
+      setTimeout(() => activeElement.classList.remove('pressed'), 150);
     }
     
-    // Haptic feedback
-    if (settings.hapticFeedback && navigator.vibrate) {
-      navigator.vibrate(30); // 30ms vibration
-    }
+    // Haptic feedback with pattern
+    this.sendHapticPattern(hapticPattern);
   }
   
   /**

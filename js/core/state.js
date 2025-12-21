@@ -162,6 +162,13 @@ class StateManager {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
       console.error(`Failed to save to localStorage: ${key}`, error);
+      
+      // Notify user of storage failure
+      if (error.name === 'QuotaExceededError') {
+        this.notifyStorageError('Storage quota exceeded. Please clear app data.');
+      } else {
+        this.notifyStorageError('Failed to save settings. Changes may not persist.');
+      }
     }
   }
   
@@ -171,6 +178,18 @@ class StateManager {
       return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
       console.error(`Failed to load from localStorage: ${key}`, error);
+      
+      // Notify user of corrupted data
+      if (error instanceof SyntaxError) {
+        this.notifyStorageError('Corrupted settings detected. Using defaults.');
+        // Clear corrupted data
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {
+          console.error('Failed to clear corrupted data:', e);
+        }
+      }
+      
       return defaultValue;
     }
   }
@@ -183,8 +202,22 @@ class StateManager {
   
   // State Updates
   updateState(changes) {
+    // Validate state changes
+    if (typeof changes !== 'object' || changes === null) {
+      console.error('Invalid state update: changes must be an object');
+      return;
+    }
+    
     this.state = { ...this.state, ...changes };
     this.notifyListeners();
+  }
+  
+  // Error Notifications
+  notifyStorageError(message) {
+    // Dispatch custom event for UI to handle
+    window.dispatchEvent(new CustomEvent('state:storage-error', {
+      detail: { message }
+    }));
   }
   
   // Observer Pattern

@@ -167,19 +167,19 @@
                 <!-- D-Pad -->
                 <div class="flex justify-center mb-8">
                     <div class="relative w-32 h-32">
-                        <button data-dpad-button="up" title="Navigate or scroll up" class="absolute top-0 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="up" title="Navigate or scroll up" class="absolute top-0 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">arrow_upward</span>
                         </button>
-                        <button data-dpad-button="left" title="Navigate or scroll left" class="absolute top-12 left-0 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="left" title="Navigate or scroll left" class="absolute top-12 left-0 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">arrow_back</span>
                         </button>
-                        <button data-dpad-button="center" title="Confirm or select current option" class="absolute top-12 left-12 w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full transition flex items-center justify-center">
+                        <button data-dpad-button="center" title="Confirm or select current option" class="absolute top-12 left-12 w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full transition-all duration-150 active:scale-95 flex items-center justify-center">
                             <span class="material-symbols-outlined text-lg">check</span>
                         </button>
-                        <button data-dpad-button="right" title="Navigate or scroll right" class="absolute top-12 left-24 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="right" title="Navigate or scroll right" class="absolute top-12 left-24 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </button>
-                        <button data-dpad-button="down" title="Navigate or scroll down" class="absolute top-24 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition">
+                        <button data-dpad-button="down" title="Navigate or scroll down" class="absolute top-24 left-12 w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">arrow_downward</span>
                         </button>
                     </div>
@@ -187,13 +187,13 @@
                 
                 <!-- Quick actions -->
                 <div class="grid grid-cols-3 gap-3 mb-8">
-                    <button data-quick-action="back" title="Go back to previous screen" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    <button data-quick-action="back" title="Go back to previous screen" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                         <span class="material-symbols-outlined text-lg">arrow_back</span>
                     </button>
-                    <button data-quick-action="home" title="Return to home screen" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    <button data-quick-action="home" title="Return to home screen" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                         <span class="material-symbols-outlined text-lg">home</span>
                     </button>
-                    <button data-quick-action="menu" title="Open main menu options" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+                    <button data-quick-action="menu" title="Open main menu options" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-all duration-150 active:scale-95">
                         <span class="material-symbols-outlined text-lg">menu</span>
                     </button>
                 </div>
@@ -212,17 +212,17 @@
                 <!-- Playback controls -->
                 <div class="mb-8">
                     <div class="grid grid-cols-5 gap-2">
-                        <button data-playback-control="replay-10s" title="Skip back ten seconds" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">-10s</button>
-                        <button data-playback-control="previous" title="Play previous track or item" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
+                        <button data-playback-control="replay-10s" title="Skip back ten seconds" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition-all duration-150 active:scale-95">-10s</button>
+                        <button data-playback-control="previous" title="Play previous track or item" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">skip_previous</span>
                         </button>
-                        <button data-playback-control="play-pause" title="Play or resume content" class="bg-blue-600 hover:bg-blue-700 py-2 rounded transition">
+                        <button data-playback-control="play-pause" title="Play or resume content" class="bg-blue-600 hover:bg-blue-700 py-2 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">play_arrow</span>
                         </button>
-                        <button data-playback-control="next" title="Play next track or item" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition">
+                        <button data-playback-control="next" title="Play next track or item" class="bg-gray-700 hover:bg-gray-600 py-2 rounded transition-all duration-150 active:scale-95">
                             <span class="material-symbols-outlined text-lg">skip_next</span>
                         </button>
-                        <button data-playback-control="forward-10s" title="Skip forward ten seconds" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition">+10s</button>
+                        <button data-playback-control="forward-10s" title="Skip forward ten seconds" class="bg-gray-700 hover:bg-gray-600 py-2 rounded text-xs transition-all duration-150 active:scale-95">+10s</button>
                     </div>
                 </div>
                 
@@ -234,7 +234,7 @@
                 </div>
                 
                 <!-- Power button -->
-                <button data-power-button title="Power off connected device" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition">
+                <button data-power-button title="Power off connected device" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition-all duration-150 active:scale-95">
                     Power Off
                 </button>
             </div>

@@ -9,6 +9,9 @@ class BluetoothManager {
     this.gattServer = null;
     this.characteristic = null;
     this.isSupported = this.checkBluetoothSupport();
+    this.reconnectAttempts = 0;
+    this.maxReconnectAttempts = 3;
+    this.reconnectTimeout = null;
   }
   
   checkBluetoothSupport() {
@@ -48,7 +51,15 @@ class BluetoothManager {
     } catch (error) {
       console.error('Error requesting Bluetooth device:', error);
       stateManager.setConnectionState(CONNECTION_STATES.ERROR);
-      throw error;
+      
+      // Provide user-friendly error messages
+      if (error.name === 'NotFoundError') {
+        throw new Error('No device selected. Please try pairing again.');
+      } else if (error.name === 'SecurityError') {
+        throw new Error('Bluetooth access denied. Check browser permissions.');
+      } else {
+        throw new Error(`Failed to discover device: ${error.message}`);
+      }
     } finally {
       stateManager.setScanning(false);
     }
@@ -66,6 +77,7 @@ class BluetoothManager {
       stateManager.setConnectionState(CONNECTION_STATES.CONNECTING);
       
       this.gattServer = await this.device.gatt.connect();
+      this.reconnectAttempts = 0; // Reset on successful connection
       stateManager.setConnectionState(CONNECTION_STATES.CONNECTED);
       
       // Store as paired device
@@ -83,7 +95,15 @@ class BluetoothManager {
     } catch (error) {
       console.error('Error connecting to device:', error);
       stateManager.setConnectionState(CONNECTION_STATES.ERROR);
-      throw error;
+      
+      // Provide user-friendly error messages
+      if (error.name === 'NetworkError') {
+        throw new Error('Device out of range or turned off.');
+      } else if (error.name === 'NotFoundError') {
+        throw new Error('Device no longer available.');
+      } else {
+        throw new Error(`Connection failed: ${error.message}`);
+      }
     }
   }
   
@@ -91,21 +111,59 @@ class BluetoothManager {
    * Disconnect from device
    */
   async disconnect() {
+    // Clear any pending reconnection attempts
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+    
     if (this.device && this.device.gatt.connected) {
       this.device.gatt.disconnect();
-      this.onDisconnected();
     }
+    
+    this.device = null;
+    this.gattServer = null;
+    this.characteristic = null;
+    this.reconnectAttempts = 0;
+    stateManager.setConnectionState(CONNECTION_STATES.DISCONNECTED);
+    stateManager.setActiveDevice(null);
   }
   
   /**
    * Handle disconnection
    */
   onDisconnected() {
-    this.device = null;
-    this.gattServer = null;
-    this.characteristic = null;
+    console.log('Device disconnected');
     stateManager.setConnectionState(CONNECTION_STATES.DISCONNECTED);
-    stateManager.setActiveDevice(null);
+    
+    // Attempt reconnection with exponential backoff
+    if (this.device && this.reconnectAttempts < this.maxReconnectAttempts) {
+      const delay = Math.pow(2, this.reconnectAttempts) * 1000; // 1s, 2s, 4s
+      this.reconnectAttempts++;
+      
+      console.log(`Reconnection attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${delay}ms`);
+      
+      this.reconnectTimeout = setTimeout(async () => {
+        try {
+          stateManager.setConnectionState(CONNECTION_STATES.CONNECTING);
+          await this.device.gatt.connect();
+          this.gattServer = this.device.gatt;
+          this.reconnectAttempts = 0;
+          stateManager.setConnectionState(CONNECTION_STATES.CONNECTED);
+          console.log('Reconnected successfully');
+        } catch (error) {
+          console.error('Reconnection failed:', error);
+          this.onDisconnected(); // Retry with next backoff
+        }
+      }, delay);
+    } else {
+      // Max attempts reached, clean up
+      this.device = null;
+      this.gattServer = null;
+      this.characteristic = null;
+      this.reconnectAttempts = 0;
+      stateManager.setActiveDevice(null);
+    }
   }
   
   /**
@@ -114,7 +172,7 @@ class BluetoothManager {
   async sendCommand(command) {
     if (!this.gattServer || !this.gattServer.connected) {
       console.warn('Device not connected');
-      return false;
+      throw new Error('Device is not connected. Please reconnect.');
     }
     
     try {
@@ -132,7 +190,14 @@ class BluetoothManager {
       return true;
     } catch (error) {
       console.error('Error sending command:', error);
-      return false;
+      
+      // Check if it's a connection error
+      if (error.name === 'NetworkError' || error.name === 'NotConnectedError') {
+        stateManager.setConnectionState(CONNECTION_STATES.ERROR);
+        throw new Error('Lost connection to device. Attempting to reconnect...');
+      }
+      
+      throw new Error(`Failed to send command: ${error.message}`);
     }
   }
   

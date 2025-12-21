@@ -75,3 +75,16 @@ export const BATTERY_THRESHOLDS = {
   LOW: 20,
   CRITICAL: 10,
 };
+
+export const HAPTIC_PATTERNS = {
+  BUTTON_PRESS: [30],           // Single short pulse for button press
+  VOLUME_CHANGE: [20, 50, 20],  // Double pulse for volume adjustment
+  SUCCESS: [30, 50, 50, 50, 70], // Ascending pattern for successful connection
+  ERROR: [100, 50, 100],        // Warning pattern for errors
+  LONG_PRESS: [50],             // Slightly longer for important actions
+};
+
+export const HAPTIC_SETTINGS = {
+  DEFAULT_INTENSITY: 1.0,       // Full intensity by default
+  REDUCED_INTENSITY: 0.5,       // For reduced motion preference
+};

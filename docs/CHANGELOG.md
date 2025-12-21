@@ -2,23 +2,49 @@
 
 All notable changes to the TV Remote Bluetooth project will be documented in this file.
 
-## [Unreleased]
+## [Unreleased]-
 
 ### Added
 
 - Project structure standardization and reorganization
 - Extracted inline CSS (198 lines) into modular component files
 - Created documented architecture with separated concerns
+- Multi-pattern haptic feedback system with 5 distinct patterns:
+  - `BUTTON_PRESS` (30ms) - Standard button interactions
+  - `VOLUME_CHANGE` (double pulse) - Volume adjustments
+  - `SUCCESS` (ascending pattern) - Successful connections
+  - `ERROR` (warning pattern) - Error states
+  - `LONG_PRESS` (50ms) - Important actions like power off
+- Accessibility support for `prefers-reduced-motion` in haptic feedback (50% intensity reduction)
+- CSS classes for UI states: `.button-disabled`, `.loading`, `.error-state`, `.error-text`
+- Spin animation keyframe for loading spinners
+- Automatic Bluetooth reconnection with exponential backoff (1s, 2s, 4s delays, max 3 attempts)
+- Storage error notification system for localStorage failures and corrupted data
+- Error handling for all Bluetooth command operations
+- Contextual error messages with actionable user guidance
 
 ### Changed
 
 - Reorganized JavaScript modules into feature-based folders (core/, services/, ui/)
 - Standardized view component folder naming to kebab-case
 - Improved CSS organization with variables, components, animations, and responsive files
+- Unified all button press feedback to `active:scale-95` with consistent 150ms transition timing
+- Enhanced button `.pressed` class with explicit 150ms transition
+- Updated all remote control buttons in index.html with standardized `transition-all duration-150`
+- Improved `applyButtonFeedback()` method to accept dynamic haptic patterns
+- Refactored `sendCommand()` to throw errors instead of silently returning false
+- Enhanced error messages in Bluetooth operations with specific failure reasons
+- Updated `showNotification()` with error handling and accessibility attributes (role="alert", aria-live)
+- Added validation to StateManager `updateState()` method
+- Improved localStorage error recovery with automatic corrupted data cleanup
 
-### Removed
+### Fixed
 
-- Inline styles from index.html (now in separate CSS files)
+- Bluetooth disconnection handling now properly attempts reconnection
+- Missing error notifications for command failures now display to users
+- Storage quota exceeded errors now show actionable messages
+- Reconnection timeout cleanup on manual disconnect
+- Missing transition properties on button press feedback
 
 ---
 

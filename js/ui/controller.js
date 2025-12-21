@@ -444,13 +444,24 @@ class UIController {
   }
   
   showNotification(message, type = 'info') {
-    // Simple notification system
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => notification.remove(), 3000);
+    try {
+      // Simple notification system
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.textContent = message;
+      notification.setAttribute('role', 'alert');
+      notification.setAttribute('aria-live', 'polite');
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to show notification:', error);
+      // Fallback to console if DOM manipulation fails
+      console.warn(`[${type.toUpperCase()}] ${message}`);
+    }
   }
 }
 
