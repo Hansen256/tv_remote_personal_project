@@ -5,9 +5,9 @@ A Google Stitch-designed Bluetooth TV remote application built with vanilla Java
 ## Project Structure
 
 ```txt
-stitch_bluetooth_remote/
-├── index.html                 # Main entry point
-├── package.json              # Project dependencies
+TV_remote/
+├── [`index.html`](index.html)                 # Main entry point
+├── [`package.json`](package.json)              # Project dependencies
 ├── .gitignore                # Git ignore rules
 ├── device_connection/        # Device pairing UI (original Google Stitch designs)
 │   ├── code.html
@@ -96,7 +96,7 @@ stitch_bluetooth_remote/
 1. **Navigate to project directory:**
 
 ```bash
-cd stitch_bluetooth_remote
+cd TV_remote
 ```
 
 1. **Install dependencies (optional - no npm packages required for MVP):**
@@ -122,6 +122,13 @@ npx http-server
 ```http
 http://localhost:8000
 ```
+
+## Testing
+
+- Install dependencies with `npm install` (or `npm ci` in CI environments).
+- Run `npm test` to execute the Jest suite targeting the `js/core` modules inside a jsdom browser simulation.
+- Web Bluetooth, vibration, matchMedia, and storage APIs are mocked globally via `tests/browserMocks.js` so the tests can run without hardware access.
+- For best results, rerun `npm test` whenever you update state management logic or persistent storage behavior; the suite provides fast feedback on regressions.
 
 ## Usage
 
@@ -473,5 +480,5 @@ For issues or questions, refer to:
 
 ---
 
-**Last Updated:** December 21, 2025  
+**Last Updated:** December 22, 2025  
 **Status:** Phase 2 - Enhanced Experience Complete

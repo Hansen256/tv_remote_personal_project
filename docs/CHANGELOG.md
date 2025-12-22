@@ -1,3 +1,4 @@
+<!--markdownlint-disable-->
 # Changelog
 
 All notable changes to the TV Remote Bluetooth project will be documented in this file.
@@ -6,6 +7,31 @@ All notable changes to the TV Remote Bluetooth project will be documented in thi
 
 ### Added
 
+- Encapsulated state reset logic with `resetForTesting()` instance method in StateManager for better test isolation
+- Static queue size storage (`#ORIGINAL_QUEUE_SIZE`) for automatic test cleanup without manual restoration
+- Test configuration helpers (`getMaxCommandQueueSizeForTesting()`, `setMaxCommandQueueSizeForTesting()`) as instance methods for consistent API
+- Modern CustomEvent polyfill using class-based constructor instead of deprecated `document.createEvent()`
+- Proper animation frame mock with numeric request IDs and DOMHighResTimeStamp timestamp support
+- Optional browser mock installation via `SKIP_BROWSER_MOCKS` environment variable for test flexibility
+- Window existence checks in `restoreBrowserMocks()` for safer test environments
+- Coverage exclusion patterns in jest.config.js to measure only production code (excludes `__tests__/` and `*.spec.js`)
+- Documented reason for disabled Jest transforms in jest.config.js
+- Jest testing framework with jsdom environment for unit tests on js/core modules
+- Comprehensive browser API mocks (`tests/browserMocks.js`) for:
+  - localStorage with in-memory backing and full API support
+  - Web Bluetooth API (requestDevice, GATT operations)
+  - Vibration API (navigator.vibrate)
+  - matchMedia with listener support (both legacy and modern APIs)
+  - requestAnimationFrame and cancelAnimationFrame
+  - CustomEvent polyfill for jsdom compatibility
+- Initial test suite for StateManager (`js/core/__tests__/state.spec.js`) with 5 unit tests covering:
+  - Onboarding completion flag initialization
+  - Default onboarding behavior when flag is missing
+  - Active device persistence to storage
+  - Command queue trimming to configured limit
+  - Storage error queuing and flushed dispatch
+- GitHub Actions workflow (`.github/workflows/test.yml`) for automated Jest test runs on push/PR
+- Testing documentation in README.md with mock coverage explanation
 - Project structure standardization and reorganization
 - Extracted inline CSS (198 lines) into modular component files
 - Created documented architecture with separated concerns
@@ -50,6 +76,7 @@ All notable changes to the TV Remote Bluetooth project will be documented in thi
 - Optimized state change handling in UI controller to reduce unnecessary re-renders
 - Moved confirmation modal logic from app.js to uiController.js for better separation of concerns
 - Updated MANIFEST.md with detailed package.json clarification, view injection process, and deployment guidance
+- Extracted magic number `16` to named constant `FRAME_TIME_MS` in browserMocks.js for improved code clarity
 
 ### Fixed
 
@@ -58,35 +85,13 @@ All notable changes to the TV Remote Bluetooth project will be documented in thi
 - Storage quota exceeded errors now show actionable messages
 - Reconnection timeout cleanup on manual disconnect
 - Missing transition properties on button press feedback
-
-### Changed
-
-- Reorganized JavaScript modules into feature-based folders (core/, services/, ui/)
-- Standardized view component folder naming to kebab-case
-- Improved CSS organization with variables, components, animations, and responsive files
-- Unified all button press feedback to `active:scale-95` with consistent 150ms transition timing
-- Enhanced button `.pressed` class with explicit 150ms transition
-- Updated all remote control buttons in index.html with standardized `transition-all duration-150`
-- Improved `applyButtonFeedback()` method to accept dynamic haptic patterns
-- Refactored `sendCommand()` to throw errors instead of silently returning false
-- Enhanced error messages in Bluetooth operations with specific failure reasons
-- Updated `showNotification()` with error handling and accessibility attributes (role="alert", aria-live)
-- Added validation to StateManager `updateState()` method
-- Improved localStorage error recovery with automatic corrupted data cleanup
-
-### Fixed
-
-- Bluetooth disconnection handling now properly attempts reconnection
-- Missing error notifications for command failures now display to users
-- Storage quota exceeded errors now show actionable messages
-- Reconnection timeout cleanup on manual disconnect
-- Missing transition properties on button press feedback
+- Added missing `apple-touch-icon` link to index.html for proper PWA support on iOS devices
 
 ---
 
 ## [1.0.0] - 2025-12-18
 
-### Added <!--markdownlint-disable-line-->
+### Added 
 
 - Initial public release
 - Web Bluetooth API integration for device discovery and pairing
@@ -171,7 +176,7 @@ All state marked for persistence is automatically saved to localStorage:
 1. Clone the repository
 2. Navigate to project directory: `cd TV_remote`
 3. Start development server: `npm run dev`
-4. Open browser to http://localhost:8000  <!--markdownlint-disable-line-->
+4. Open browser to http://localhost:8000  
 
 The development server uses Python's http.server on port 8000. This is required for Web Bluetooth API support (HTTPS or localhost only).
 

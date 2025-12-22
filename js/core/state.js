@@ -1,12 +1,24 @@
 // Centralized State Management
+// Singleton pattern enforced via static instance guard.
+// Only the singleton instance is exported; attempting to instantiate new instances will throw an error.
 
 import { STORAGE_KEYS, DEFAULT_SETTINGS, CONNECTION_STATES, VIEWS } from './constants.js';
 
 class StateManager {
   // Configuration
   static MAX_COMMAND_QUEUE_SIZE = 100;
+  static #ORIGINAL_QUEUE_SIZE; // Store original for test cleanup
+  static #instance = null;
+
+  static {
+    StateManager.#ORIGINAL_QUEUE_SIZE = StateManager.MAX_COMMAND_QUEUE_SIZE;
+  }
   
   constructor() {
+    if (StateManager.#instance !== null) {
+      throw new Error('StateManager is a singleton. Use the exported stateManager instance instead of creating a new instance.');
+    }
+    StateManager.#instance = this;
     const onboardingComplete = this.loadFromStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, false);
     
     this.state = {
@@ -284,7 +296,54 @@ class StateManager {
   notifyListeners() {
     this.listeners.forEach(listener => listener(this.getState()));
   }
+
+  /**
+   * Reset state to initial values (for testing only)
+   * 
+   * Clears all instance state while preserving onboarding completion status.
+   * ⚠️ IMPORTANT: This method modifies static class state (MAX_COMMAND_QUEUE_SIZE).
+   * 
+   * Side effects:
+   * - Clears all localStorage entries (except onboarding flag)
+   * - Resets MAX_COMMAND_QUEUE_SIZE to original value (100)
+   * - Clears all event listeners and error queues
+   * - Resets initialization flag
+   * 
+   * Test isolation: Must be called in beforeEach hooks or test setup to ensure
+   * clean state between tests. Failure to do so may cause test pollution.
+   */
+  resetForTesting() {
+    const onboardingComplete = this.loadFromStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, false);
+    
+    this.clearStorage();
+    this.saveToStorage(STORAGE_KEYS.ONBOARDING_COMPLETE, onboardingComplete);
+    
+    this.listeners = [];
+    this.errorQueue = [];
+    this.isInitialized = false;
+    StateManager.MAX_COMMAND_QUEUE_SIZE = StateManager.#ORIGINAL_QUEUE_SIZE;
+    this.state = {
+      currentView: onboardingComplete ? VIEWS.DEVICE_LIST : VIEWS.ONBOARDING,
+      onboardingSlide: 0,
+      onboardingComplete: onboardingComplete,
+      pairedDevices: [],
+      activeDeviceId: null,
+      discoveredDevices: [],
+      connectionState: CONNECTION_STATES.DISCONNECTED,
+      isScanning: false,
+      settings: DEFAULT_SETTINGS,
+      deviceStatus: {},
+      showConnectingAnimation: false,
+      lastCommand: null,
+      commandQueue: [],
+    };
+  }
 }
 
 // Singleton instance
 export const stateManager = new StateManager();
+
+// For testing: delegate to the instance method
+export function resetStateManagerForTesting() {
+  stateManager.resetForTesting();
+}

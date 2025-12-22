@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "description": "Google Stitch Bluetooth TV Remote Application",
   "type": "module",
-  "main": "js/app.js",
+  "main": "js/core/app.js",
   "scripts": {
     "dev": "python -m http.server 8000",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [
     "bluetooth",
@@ -15,6 +15,10 @@
   ],
   "author": "",
   "license": "ISC",
-  "devDependencies": {},
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
   "dependencies": {}
 }
