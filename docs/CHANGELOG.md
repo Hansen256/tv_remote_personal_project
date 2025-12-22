@@ -59,6 +59,15 @@ All notable changes to the TV Remote Bluetooth project will be documented in thi
 
 ### Changed
 
+- Encapsulated state reset logic with `resetForTesting()` instance method in StateManager for better test isolation
+- Static queue size storage (`#ORIGINAL_QUEUE_SIZE`) for automatic test cleanup without manual restoration
+- Test configuration helpers (`getMaxCommandQueueSizeForTesting()`, `setMaxCommandQueueSizeForTesting()`) as instance methods for consistent API
+- Modern CustomEvent polyfill using class-based constructor instead of deprecated `document.createEvent()`
+- Proper animation frame mock with numeric request IDs and DOMHighResTimeStamp timestamp support
+- Added comprehensive JSDoc documentation to `resetForTesting()` method with explicit warnings about static state modifications and test isolation requirements
+- Removed redundant coverage exclusion pattern in jest.config.js (consolidated to `!js/**/__tests__/**`)
+- Enhanced afterEach hook in state.spec.js with `localStorage.clear()` to prevent cross-test pollution
+- Optimized error message in StateManager constructor to be path-agnostic (removed hardcoded './state.js' reference)
 - Reorganized JavaScript modules into feature-based folders (core/, services/, ui/)
 - Standardized view component folder naming to kebab-case
 - Improved CSS organization with variables, components, animations, and responsive files

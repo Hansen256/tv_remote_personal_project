@@ -12,6 +12,7 @@ describe('StateManager', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     stateManager.setMaxCommandQueueSizeForTesting(originalMaxQueueSize);
+    localStorage.clear();
   });
 
   test('initial view respects onboarding completion flag', () => {
