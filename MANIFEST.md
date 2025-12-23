@@ -172,6 +172,7 @@ View Containers (in index.html):
 - **Initializes**: stateManager, bluetoothManager, uiController
 - **Coordinates**: Event routing, command execution, state updates
 - **Entry point**: Loaded by index.html module script
+- **Initialization sequence**: constants → state manager → bluetooth manager & UI controller → app. Bluetooth manager and UI controller initialize after state manager to subscribe to state changes.
 
 ---
 
