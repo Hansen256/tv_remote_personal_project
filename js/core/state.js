@@ -298,6 +298,25 @@ class StateManager {
   }
 
   /**
+   * Get the current maximum command queue size (for testing only)
+   * @returns {number} The current MAX_COMMAND_QUEUE_SIZE value
+   */
+  getMaxCommandQueueSizeForTesting() {
+    return StateManager.MAX_COMMAND_QUEUE_SIZE;
+  }
+
+  /**
+   * Set the maximum command queue size (for testing only)
+   * @param {number} size - The new maximum queue size
+   */
+  setMaxCommandQueueSizeForTesting(size) {
+    if (typeof size !== 'number' || size <= 0 || !Number.isFinite(size) || !Number.isInteger(size)) {
+      throw new Error('Queue size must be a positive finite integer');
+    }
+    StateManager.MAX_COMMAND_QUEUE_SIZE = size;
+  }
+
+  /**
    * Reset state to initial values (for testing only)
    * 
    * Clears all instance state while preserving onboarding completion status.
