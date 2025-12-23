@@ -310,8 +310,8 @@ class StateManager {
    * @param {number} size - The new maximum queue size
    */
   setMaxCommandQueueSizeForTesting(size) {
-    if (typeof size !== 'number' || size <= 0 || !Number.isFinite(size)) {
-      throw new Error('Queue size must be a positive finite number');
+    if (typeof size !== 'number' || size <= 0 || !Number.isFinite(size) || !Number.isInteger(size)) {
+      throw new Error('Queue size must be a positive finite integer');
     }
     StateManager.MAX_COMMAND_QUEUE_SIZE = size;
   }

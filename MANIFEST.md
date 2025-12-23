@@ -1,3 +1,4 @@
+<!--markdownlint-disable-->
 # Project Manifest
 
 Complete file inventory and dependencies for the TV Remote Bluetooth project.
@@ -18,7 +19,7 @@ Complete file inventory and dependencies for the TV Remote Bluetooth project.
 
 | File | Purpose | Lines |
 |------|---------|-------|
-| `index.html`|  Main application shell, loads CSS and JS modules | 509 |
+| `index.html` | Main application shell, loads CSS and JS modules | 509 |
 
 ## Stylesheets
 
@@ -78,7 +79,7 @@ Complete file inventory and dependencies for the TV Remote Bluetooth project.
 
 ## Dependency Graph
 
-```
+```txt
 index.html (entry point)
   ├─ External CDN Resources
   │  ├─ Tailwind CSS 3 (https://cdn.tailwindcss.com)
@@ -122,7 +123,7 @@ View Containers (in index.html):
 ## Code Statistics
 
 | Metric | Value | Notes |
-|--------|-------|-------|
+| -------- | ------- | ------- |
 | **HTML** | 509 lines | Single-page app shell |
 | **CSS** | 228 lines | Extracted from inline, organized by concern |
 | **JavaScript** | 1,278 lines | Modular, feature-based organization |
@@ -140,7 +141,7 @@ View Containers (in index.html):
 ### localStorage Keys
 
 | Key | Data Type | Persistence | Example |
-|-----|-----------|-------------|---------|
+| ----- | ----------- | ------------- | --------- |
 | `onboarding-complete` | Boolean | Post-onboarding | `true` |
 | `paired-devices` | Array | All paired devices | `[{id, name, ...}, ...]` |
 | `active-device-id` | String | Currently selected device | `"device-1"` |
@@ -154,21 +155,25 @@ View Containers (in index.html):
 ## Module Relationships
 
 ### State Manager (Singleton)
+
 - **Used by**: app.js, bluetooth.js, ui-controller.js
 - **Pattern**: Observer pattern with subscribers
 - **Responsibility**: Centralized state, localStorage sync, notifications
 
 ### Bluetooth Manager (Singleton)
+
 - **Used by**: app.js
 - **Pattern**: Async command execution with error handling
 - **Responsibility**: Web Bluetooth API abstraction, device lifecycle
 
 ### UI Controller (Singleton)
+
 - **Used by**: app.js
 - **Pattern**: Event delegation, view management
 - **Responsibility**: View navigation, DOM updates, event listeners
 
 ### App (Singleton)
+
 - **Initializes**: stateManager, bluetoothManager, uiController
 - **Coordinates**: Event routing, command execution, state updates
 - **Entry point**: Loaded by index.html module script
@@ -201,6 +206,7 @@ View Containers (in index.html):
    - Size: ~30 KB
 
 ### No npm Dependencies
+
 - ✅ Pure vanilla JavaScript (ES6+)
 - ✅ No build step required
 - ✅ Direct ES module imports in browser
@@ -221,12 +227,14 @@ http://localhost:8000
 ```
 
 ### Why Python http.server?
+
 - **Requirement**: Web Bluetooth API requires secure context (HTTPS or localhost)
 - **Simple**: No build step, no bundler needed
 - **Portable**: Python is pre-installed on most systems
 - **Sufficient**: Serves static files for local development
 
 ### Alternative Servers
+
 - `npx http-server`
 - `npx serve`
 - Node.js express server
@@ -237,11 +245,13 @@ http://localhost:8000
 ## Build & Deployment Notes
 
 ### No Build Step
+
 - Direct ES6 module imports in browser
 - No transpilation needed
 - All CSS and JS organized but not bundled
 
 ### For Production
+
 Consider:
 - CSS minification
 - JavaScript minification & bundling
@@ -250,6 +260,7 @@ Consider:
 - CDN caching headers
 
 ### Deployment Requirements
+
 - HTTPS support (for Web Bluetooth API)
 - Static file hosting (HTML, CSS, JS, images)
 - CORS headers if serving from different domain
@@ -260,7 +271,7 @@ Consider:
 ## File Size Overview
 
 | Category | Files | Total Size (approx) |
-|----------|-------|-------------------|
+| ---------- | ------- | ------------------- |
 | HTML | 1 | 20 KB |
 | CSS (total) | 6 | 10 KB |
 | JavaScript (total) | 5 | 45 KB |
