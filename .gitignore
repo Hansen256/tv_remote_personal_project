@@ -10,7 +10,11 @@ build/
 .cache/
 .github/prompts/.github/copilot-instructions.md
 .github/prompts/plan-standardizeProjectStructure.prompt.md
-.gitignore
 REORGANIZATION_COMPLETE.md
 MANIFEST.md
 IMPLEMENTATION_SUMMARY.md
+*.github/agents/
+*.github/prompts/
+*.specify/scripts/
+*.specify/memory/
+*.specify/templates/
